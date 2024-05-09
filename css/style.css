@@ -3,6 +3,9 @@
   font-optical-sizing: auto;
   font-weight: <weight>;
   font-style: normal;
+  font-size: 38;
+  letter-spacing: -2.2;
+  line-height: 46;
   font-variation-settings:
     "slnt" 0;
 }
