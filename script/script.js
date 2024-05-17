@@ -1,32 +1,34 @@
-$(function() {
-	let xs = []
-	for (var i = 0; i <= 200; i++) {
-		xs.push(i)
-	}
+$(function () {
+  let xs = [];
+  for (var i = 0; i <= 200; i++) {
+    xs.push(i);
+  }
 
-	let t = 0
+  let t = 0;
 
-	function animate() {
+  function animate() {
+    let points = xs.map((x) => {
+      let y = 10 + 3 * Math.sin((x + t) / 4);
 
-		let points = xs.map(x => {
+      return [x, y];
+    });
 
-			let y = 10 + 3 * Math.sin((x + t) / 4)
+    let path =
+      "M" +
+      points
+        .map((p) => {
+          return p[0] + "," + p[1];
+        })
+        .join(" L");
 
-			return [x, y]
-		})
+    $("path").each(function () {
+      $(this).attr("d", path);
+    });
 
-		let path = "M" + points.map(p => {
-			return p[0] + "," + p[1]
-		}).join(" L")
+    t += 0.1;
 
-		$('path').each(function() {
-			$(this).attr('d', path);
-		})
+    requestAnimationFrame(animate);
+  }
 
-		t += 0.1
-
-		requestAnimationFrame(animate)
-	}
-
-	animate();  
-})
+  animate();
+});
