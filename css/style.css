@@ -33,15 +33,18 @@ nav {
   left: 0;
   z-index: 99;
   background-color: var(--extra-light);
+  min-height: 10dvh;
 }
 
 .nav__content {
   max-width: var(--max-width);
   margin: auto;
-  padding: 1.5rem 1rem;
+  padding: 1.5rem;
   display: flex;
   align-items: center;
   justify-content: space-between;
+  min-height: 10dvh;
+  /* border: solid red 1px; */
 }
 
 nav .logo a {
@@ -54,17 +57,8 @@ nav .logo a:hover {
   color: var(--primary-color-dark);
 }
 
-nav .checkbox {
-  display: none;
-}
-
 nav input {
   display: none;
-}
-nav .checkbox i {
-  font-size: 2rem;
-  color: var(--primary-color);
-  cursor: pointer;
 }
 
 ul {
@@ -73,6 +67,7 @@ ul {
   gap: 1rem;
   list-style: none;
   transition: left 0.3s;
+  /* border: solid green 4px; */
 }
 
 ul li a {
@@ -202,16 +197,16 @@ ul li a:hover {
   fill: none;
   transition: stroke-dasharray 400ms, stroke-dashoffset 400ms;
   stroke: var(--primary-color);
-  stroke-width: 5.5;
+  stroke-width: 7.0;
   stroke-linecap: round;
 }
 
 .ham4 .top {
-  stroke-dasharray: 40 121;
+  stroke-dasharray: 39.99 121;
 }
 
 .ham4 .bottom {
-  stroke-dasharray: 40 121;
+  stroke-dasharray: 39.99 121;
 }
 
 .ham4.active .top {
@@ -224,19 +219,20 @@ ul li a:hover {
 
 @media (width < 750px) {
   .ham {
-    display: block;
+    display: inline;
   }
 
   ul {
-    position: absolute;
+    position: fixed;
     width: 100%;
-    min-height: calc(100dvh - 85px);
+    min-height: 100dvh;
     left: -100%;
-    top: 85px;
+    top: 0;
     background-color: var(--extra-light);
     flex-direction: column;
     justify-content: center;
     gap: 3rem;
+    z-index: -1;
   }
 
   nav .ham4.active ~ ul {
