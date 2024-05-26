@@ -202,7 +202,7 @@ ul li a:hover {
   fill: none;
   transition: stroke-dasharray 400ms, stroke-dashoffset 400ms;
   stroke: var(--primary-color);
-  stroke-width: 7;
+  stroke-width: 5.5;
   stroke-linecap: round;
 }
 
