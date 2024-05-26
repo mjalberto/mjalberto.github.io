@@ -116,6 +116,7 @@ a:hover {
   -webkit-user-select: none;
   -ms-user-select: none;
   user-select: none;
+  
   @media (min-width: 767px) {
     display: none;
   }
