@@ -22,6 +22,7 @@ a {
 
 body {
   font-family: "Poppins", sans-serif;
+  min-height: 100dvh;
 }
 
 nav {
@@ -96,7 +97,7 @@ ul li a:hover {
   min-height: 100dvh;
   max-width: var(--max-width);
   margin: auto;
-  padding: 1rem;
+  padding: 10rem 1rem 5rem 1rem;
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 4rem;
@@ -189,7 +190,7 @@ ul li a:hover {
   ul {
     position: absolute;
     width: 100%;
-    height: calc(100dvh - 85px);
+    min-height: calc(100dvh - 85px);
     left: -100%;
     top: 85px;
     background-color: var(--extra-light);
@@ -210,6 +211,7 @@ ul li a:hover {
     padding: 10rem 1rem 5rem 1rem;
     text-align: center;
     grid-template-columns: repeat(1, 1fr);
+    min-height: 0;
   }
 
   .image {
