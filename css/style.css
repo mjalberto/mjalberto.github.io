@@ -56,6 +56,10 @@ nav {
   gap: 3rem;
   list-style: none;
   font-size: calc(25rem / 16);
+  
+  @media (max-width: 767px) {
+    display: none;
+  }
 }
 
 a {
@@ -102,4 +106,43 @@ a:hover {
   justify-content: center;
   /* align-items: center; */
   /* background-color: rgba(31, 113, 60, 0.5); */
+}
+
+.ham {
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition: transform 400ms;
+  -moz-user-select: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  @media (min-width: 767px) {
+    display: none;
+  }
+}
+.hamRotate.active {
+  transform: rotate(45deg);
+}
+.hamRotate180.active {
+  transform: rotate(180deg);
+}
+.line {
+  fill:none;
+  transition: stroke-dasharray 400ms, stroke-dashoffset 400ms;
+  stroke:#1d1d1f;
+  stroke-width:5.5;
+  stroke-linecap:round;
+}
+
+.ham4 .top {
+  stroke-dasharray: 40 121;
+}
+.ham4 .bottom {
+  stroke-dasharray: 40 121;
+}
+.ham4.active .top {
+  stroke-dashoffset: -68px;
+}
+.ham4.active .bottom {
+  stroke-dashoffset: -68px;
 }

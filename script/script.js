@@ -1,34 +1,17 @@
-$(function () {
-  let xs = [];
-  for (var i = 0; i <= 200; i++) {
-    xs.push(i);
-  }
+window.onload = function () {
+	window.addEventListener('scroll', function (e) {
+		if (window.pageYOffset > 100) {
+			document.querySelector("header").classList.add('is-scrolling');
+		} else {
+			document.querySelector("header").classList.remove('is-scrolling');
+		}
+	});
 
-  let t = 0;
+	const menu_btn = document.querySelector('.hamburger');
+	const mobile_menu = document.querySelector('.mobile-nav');
 
-  function animate() {
-    let points = xs.map((x) => {
-      let y = 10 + 3 * Math.sin((x + t) / 4);
-
-      return [x, y];
-    });
-
-    let path =
-      "M" +
-      points
-        .map((p) => {
-          return p[0] + "," + p[1];
-        })
-        .join(" L");
-
-    $("path").each(function () {
-      $(this).attr("d", path);
-    });
-
-    t += 0.1;
-
-    requestAnimationFrame(animate);
-  }
-
-  animate();
-});
+	menu_btn.addEventListener('click', function () {
+		menu_btn.classList.toggle('is-active');
+		mobile_menu.classList.toggle('is-active');
+	});
+}
