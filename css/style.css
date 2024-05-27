@@ -16,14 +16,27 @@
   box-sizing: border-box;
 }
 
-a {
-  text-decoration: none;
+html {
+  scroll-behavior: smooth;
+}
+
+#home .section .section__container{
+  border: solid red 1px;
 }
 
 body {
   font-family: "Poppins", sans-serif;
   background-color: var(--extra-light);
   min-height: 100dvh;
+}
+
+a {
+  text-decoration: none;
+}
+
+#about,#portfolio,#contact p {
+  text-indent: 2rem;
+  text-align: justify;
 }
 
 nav {
@@ -53,8 +66,10 @@ nav .logo a {
   color: var(--primary-color);
   transition: 0.3s;
 }
+
 nav .logo a:hover {
   color: var(--primary-color-dark);
+  cursor: default;
 }
 
 nav input {
@@ -99,6 +114,10 @@ ul li a:hover {
   gap: 4rem;
 }
 
+#about .section__container {
+  grid-template-columns: repeat(1fr, 1fr);
+}
+
 .content {
   display: flex;
   flex-direction: column;
@@ -106,6 +125,7 @@ ul li a:hover {
 }
 
 .subtitle {
+  font-size: 1.3rem;
   letter-spacing: 2px;
   color: var(--text-light);
   font-weight: 600;
@@ -113,7 +133,7 @@ ul li a:hover {
 }
 
 .title {
-  font-size: 2.5rem;
+  font-size: 2.6rem;
   font-weight: 400;
   line-height: 3rem;
   color: var(--text-dark);
@@ -125,6 +145,7 @@ ul li a:hover {
 }
 
 .description {
+  font-size: 1.3rem;
   line-height: 1.5rem;
   color: var(--text-light);
   margin-bottom: 2rem;
@@ -172,10 +193,13 @@ ul li a:hover {
 
 .image img {
   width: min(25rem, 90%);
-  border-radius: 100%;
   @media (width < 750px) {
     width: min(15rem, 90%);
   }
+}
+
+.round {
+  border-radius: 100%;
 }
 
 .ham {

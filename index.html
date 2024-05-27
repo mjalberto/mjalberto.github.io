@@ -16,7 +16,8 @@
             class="ham hamRotate ham4"
             viewBox="0 0 100 100"
             width="40"
-            onclick="this.classList.toggle('active');"
+            id="menu"
+            onclick="menu()"
           >
             <path
               class="line top"
@@ -29,34 +30,69 @@
             />
           </svg>
           <ul>
-            <li><a href="#">Home</a></li>
-            <li><a href="#">About</a></li>
-            <li><a href="#">Resume</a></li>
-            <li><a href="#">Portfolio</a></li>
-            <li><a href="#">Contact</a></li>
+            <li><a href="#home" onclick="menu()">Home</a></li>
+            <li><a href="#about" onclick="menu()">About</a></li>
+            <li><a href="#portfolio" onclick="menu()">Portfolio</a></li>
+            <li><a href="#contact" onclick="menu()">Contact</a></li>
           </ul>
         </div>
       </nav>
-      <section class="section">
+      <section class="section" id="home">
         <div class="section__container">
           <div class="content">
             <p class="subtitle">HELLO</p>
             <h1 class="title">
               I'm <span>MJ<br />a</span> Graphic Artist
             </h1>
-            <p class="description">Anong ginagawa mo dito ha? Alis!</p>
+            <p class="description">
+              I'm passionate about all things graphic design. With six months of
+              professional experience, I'm diving headfirst into the world of
+              visual storytelling.
+            </p>
             <div class="action__btns">
               <button class="hire__me">Hire Me</button>
               <button class="portfolio">Portfolio</button>
             </div>
           </div>
           <div class="image">
-            <img src="assets/profile.jpg" alt="profile" />
+            <img src="assets/profile.jpg" class="round" alt="profile" />
           </div>
         </div>
       </section>
-      <div class="projects"></div>
-      <footer></footer>
+
+      <section class="section" id="about">
+        <div class="section__container">
+          <div class="image">
+            <img src="assets/design.svg" alt="Design Process" />
+          </div>
+
+          <div class="content">
+            <h1 class="subtitle">ABOUT ME</h1>
+            <p>
+              For me, graphic design is more than just a job—it's a creative
+              playground where I get to bring ideas to life with color,
+              composition, and imagination. From sleek logos to dynamic digital
+              designs, I thrive on the challenge of turning concepts into
+              captivating visuals that leave a lasting impact.
+            </p>
+            <br />
+            <p>
+              What sets me apart is my dedication to staying on the cutting edge
+              of design trends and technologies. I love exploring new tools and
+              techniques to create innovative and impactful work for my clients.
+            </p>
+            <br />
+            <p>
+              But my journey is far from over. I'm constantly seeking new
+              opportunities to grow and learn, pushing the boundaries of my
+              craft with each new challenge. With every design, I aim to
+              inspire, captivate, and make a difference in the world, one pixel
+              at a time.
+            </p>
+          </div>
+        </div>
+      </section>
     </div>
+    <script src="js/script.js"></script>
   </body>
 </html>
