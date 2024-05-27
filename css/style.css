@@ -1,32 +1,42 @@
+@import url('https://fonts.googleapis.com/css2?family=Mulish:ital,wght@0,200..1000;1,200..1000&display=swap');
 @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap");
 
 :root {
-  --primary-color: #4a676d;
-  --primary-color-dark: #2f4858;
-  --secondary-color: #36675e;
-  --text-dark: #1f2937;
+  --primary-color: #665df5;
+  --primary-color-dark: #544af4;
+  --text: #58585d;
+  --text-dark: #161617;
   --text-light: #6b7280;
-  --extra-light: #e8e5de;
+  --extra-light:#efefef;
+  --bg: #fdfdfd;
+  --bg-alt: #fff;
+  --font-Mulish: "Mulish", sans-serif;
+  --font-Poppins: "Poppins", sans-serif;
   --max-width: 1200px;
+  --fs-xl: clamp(2.6rem, 12vw + 1rem, 3.0rem);
+  --fs-600: 2rem;
+  --fs-500: 1.5rem;
+  --fs-400: 1rem;
 }
 
 * {
   padding: 0;
   margin: 0;
   box-sizing: border-box;
+  backface-visibility: hidden;
+  perspective: 1000;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 html {
   scroll-behavior: smooth;
-}
-
-#home .section .section__container{
-  border: solid red 1px;
+  text-rendering: optimizeLegibility;
 }
 
 body {
-  font-family: "Poppins", sans-serif;
-  background-color: var(--extra-light);
+  font-family: var(--font-Mulish);
+  background-color: var(--bg);
   min-height: 100dvh;
 }
 
@@ -34,7 +44,25 @@ a {
   text-decoration: none;
 }
 
-#about,#portfolio,#contact p {
+p {
+  line-height: 1.5;
+}
+
+.mj {
+  font-family: var(--font-Poppins);
+}
+
+.t-center {
+  text-align: center;
+}
+
+.c-title {
+  font-weight: 700;
+}
+
+#about,
+#portfolio,
+#contact p {
   text-indent: 2rem;
   text-align: justify;
 }
@@ -45,7 +73,7 @@ nav {
   top: 0;
   left: 0;
   z-index: 99;
-  background-color: var(--extra-light);
+  background-color: var(--bg);
   min-height: 10dvh;
 }
 
@@ -61,7 +89,8 @@ nav {
 }
 
 nav .logo a {
-  font-size: 1.5rem;
+  font-family: var(--font-Poppins);
+  font-size: var(--fs-500);
   font-weight: 600;
   color: var(--primary-color);
   transition: 0.3s;
@@ -87,21 +116,18 @@ ul {
 
 ul li a {
   padding: 0.5rem 1rem;
-  border: 2px solid transparent;
   text-decoration: none;
   font-weight: 600;
-  color: var(--text-dark);
+  color: var(--text);
   transition: 0.3s;
 }
 
 ul li a:hover {
-  border-top-color: var(--secondary-color);
-  border-bottom-color: var(--secondary-color);
-  color: var(--secondary-color);
+  color: var(--primary-color);
 }
 
 .section {
-  background-color: var(--extra-light);
+  background-color: var(--bg);
 }
 
 .section__container {
@@ -127,13 +153,13 @@ ul li a:hover {
 .subtitle {
   font-size: 1.3rem;
   letter-spacing: 2px;
-  color: var(--text-light);
+  color: var(--primary-color);
   font-weight: 600;
   margin-bottom: 0.5rem;
 }
 
 .title {
-  font-size: 2.6rem;
+  font-size: var(--fs-xl);
   font-weight: 400;
   line-height: 3rem;
   color: var(--text-dark);
@@ -145,45 +171,10 @@ ul li a:hover {
 }
 
 .description {
-  font-size: 1.3rem;
+  font-size: var(--fs-400);
   line-height: 1.5rem;
   color: var(--text-light);
   margin-bottom: 2rem;
-}
-
-.action__btns {
-  display: flex;
-  gap: 1rem;
-}
-
-.action__btns button {
-  font-size: 1rem;
-  font-weight: 600;
-  letter-spacing: 2px;
-  padding: 1rem 2rem;
-  outline: none;
-  border: 2px solid var(--primary-color);
-  border-radius: 10px;
-  transition: 0.3s;
-  cursor: pointer;
-}
-
-.hire__me {
-  background-color: var(--primary-color);
-  color: #ffffff;
-}
-
-.hire__me:hover {
-  background-color: var(--primary-color-dark);
-}
-
-.portfolio {
-  color: var(--primary-color);
-}
-
-.portfolio:hover {
-  background-color: var(--primary-color-dark);
-  color: #ffffff;
 }
 
 .image {
@@ -221,7 +212,7 @@ ul li a:hover {
   fill: none;
   transition: stroke-dasharray 400ms, stroke-dashoffset 400ms;
   stroke: var(--primary-color);
-  stroke-width: 7.0;
+  stroke-width: 7;
   stroke-linecap: round;
 }
 
@@ -269,7 +260,7 @@ ul li a:hover {
 
   .section__container {
     padding: 10rem 1rem 5rem 1rem;
-    text-align: center;
+    text-align: justify;
     grid-template-columns: repeat(1, 1fr);
     min-height: 0;
   }
