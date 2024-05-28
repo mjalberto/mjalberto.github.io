@@ -51,13 +51,13 @@ body {
   perspective: 1000;
 }
 
-.line {
+.seperator {
   border: 0;
   height: 1px;
   background-image: linear-gradient(
     to right,
     rgba(0, 0, 0, 0),
-    var(--text),
+    var(--text-light),
     rgba(0, 0, 0, 0)
   );
 }
@@ -253,13 +253,9 @@ ul li a:hover {
   stroke-dashoffset: -68px;
 }
 
-.fixed-pos {
-  position: fixed;
-}
-
 @media (width < 750px) {
   .ham {
-    display: inline;
+    display: block;
   }
 
   ul {

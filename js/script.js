@@ -13,7 +13,7 @@ ScrollReveal({
 
 // SEPERATOR
 
-ScrollReveal().reveal(".line", { delay: "600" });
+ScrollReveal().reveal(".seperator", { delay: "600" });
 
 // HOME
 
