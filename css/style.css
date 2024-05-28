@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Mulish:ital,wght@0,200..1000;1,200..1000&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Mulish:ital,wght@0,200..1000;1,200..1000&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap");
 
 :root {
@@ -13,10 +13,17 @@
   --font-Mulish: "Mulish", sans-serif;
   --font-Poppins: "Poppins", sans-serif;
   --max-width: 1200px;
-  --fs-xl: clamp(2.6rem, 12vw + 1rem, 3.0rem);
-  --fs-600: 2rem;
-  --fs-500: 1.5rem;
-  --fs-400: 1rem;
+  --fs-600: 2.188rem;
+  --fs-500: 1.875rem;
+  --fs-400: 1.125rem;
+}
+
+@media (width < 480px) {
+  :root {
+    --fs-600: 1.313rem;
+    --fs-500: 1.125rem;
+    --fs-400: 1rem;
+  }
 }
 
 * {
@@ -34,6 +41,7 @@ body {
   background-color: var(--bg);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  min-width: 320px;
 }
 
 .gpu {
@@ -44,7 +52,18 @@ body {
 .line {
   border: 0;
   height: 1px;
-  background-image: linear-gradient(to right, rgba(0, 0, 0, 0), #efefef, rgba(0, 0, 0, 0));
+  background-image: linear-gradient(
+    to right,
+    rgba(0, 0, 0, 0),
+    #efefef,
+    rgba(0, 0, 0, 0)
+  );
+}
+
+.landing {
+  min-height: 100dvh;
+  padding: 1rem;
+  background-color: var(--primary-color);
 }
 
 a {
@@ -53,6 +72,7 @@ a {
 
 p {
   line-height: 1.5;
+  font-size: var(--fs-400);
 }
 
 .mj {
@@ -66,13 +86,6 @@ p {
 .email {
   color: var(--primary-color);
   font-weight: 700;
-}
-
-#about,
-#portfolio,
-#contact p {
-  text-indent: 2rem;
-  text-align: justify;
 }
 
 nav {
@@ -93,7 +106,6 @@ nav {
   align-items: center;
   justify-content: space-between;
   min-height: 10dvh;
-  /* border: solid red 1px; */
 }
 
 nav .logo a {
@@ -119,7 +131,6 @@ ul {
   gap: 1rem;
   list-style: none;
   transition: left 0.3s ease;
-  /* border: solid green 4px; */
 }
 
 ul li a {
@@ -128,6 +139,7 @@ ul li a {
   font-weight: 700;
   color: var(--text);
   transition: 0.3s ease;
+  font-size: var(--fs-400);
 }
 
 ul li a:hover {
@@ -142,7 +154,7 @@ ul li a:hover {
   min-height: 100dvh;
   max-width: var(--max-width);
   margin: auto;
-  /* padding: 10rem 1rem 5rem 1rem; */
+  padding: 1rem;
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 4rem;
@@ -159,17 +171,15 @@ ul li a:hover {
 }
 
 .subtitle {
-  font-size: 1.3rem;
+  font-size: var(--fs-500);
   letter-spacing: 2px;
   color: var(--primary-color);
-  font-weight: 700;
   margin-bottom: 0.5rem;
 }
 
 .title {
-  font-size: var(--fs-xl);
-  font-weight: 400;
-  line-height: 3rem;
+  font-size: var(--fs-600);
+  /* line-height: 3rem; */
   color: var(--text-dark);
   margin-bottom: 1rem;
 }
@@ -263,11 +273,11 @@ ul li a:hover {
   }
 
   ul li a {
-    font-size: 1.25rem;
+    font-size: var(--fs-500);
   }
 
   .section__container {
-    padding: 6rem 1rem 5rem 1rem;
+    padding: 6rem 1rem 6rem 1rem;
     /* align-items: center; */
     grid-template-columns: repeat(1, 1fr);
     min-height: 0;
