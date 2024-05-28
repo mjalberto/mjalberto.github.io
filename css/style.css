@@ -251,6 +251,10 @@ ul li a:hover {
   stroke-dashoffset: -68px;
 }
 
+.fixed-pos {
+  position: fixed;
+}
+
 @media (width < 750px) {
   .ham {
     display: inline;
