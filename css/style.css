@@ -136,7 +136,8 @@ ul {
 ul li a {
   padding: 0.5rem 1rem;
   text-decoration: none;
-  font-weight: 700;
+  font-family: var(--font-Poppins);
+  font-weight: 600;
   color: var(--text);
   transition: 0.3s ease;
   font-size: var(--fs-400);
