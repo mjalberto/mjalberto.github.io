@@ -3,8 +3,6 @@ function menu() {
   element.classList.toggle("active");
 }
 
-classList.contains("active");
-
 ScrollReveal({
   reset: true,
   distance: "5%",
