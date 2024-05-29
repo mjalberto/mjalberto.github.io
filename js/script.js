@@ -1,11 +1,18 @@
+// HAMBURGER MENU
+
 function menu() {
-  var element = document.getElementById("menu");
-  element.classList.toggle("active");
+  var x = document.getElementById("menu");
+
+  if (window.getComputedStyle(x).visibility === "visible") {
+    x.classList.toggle("active");
+  }
 }
+
+// SCROLL REVEAL GLOBAL
 
 ScrollReveal({
   reset: true,
-  distance: "5%",
+  distance: "35%",
   duration: "1000",
   // delay: "200",
   // origin: "left",
