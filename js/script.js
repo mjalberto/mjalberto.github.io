@@ -27,7 +27,7 @@ function checkScroll() {
 
 ScrollReveal({
   reset: true,
-  distance: "35%",
+  distance: "30%",
   duration: "1000",
   // delay: "200",
   // origin: "left",
@@ -49,8 +49,8 @@ ScrollReveal().reveal(".description", { origin: "bottom", delay: "1200" });
 ScrollReveal().reveal(".img02", { origin: "left", delay: "300" });
 ScrollReveal().reveal(".sub02", { origin: "right", delay: "600" });
 ScrollReveal().reveal(".s01-p01", { origin: "left", delay: "900" });
-ScrollReveal().reveal(".s01-p02", { origin: "right", delay: "1000" });
-ScrollReveal().reveal(".s01-p03", { origin: "bottom", delay: "1100" });
+ScrollReveal().reveal(".s01-p02", { origin: "right", delay: "900" });
+ScrollReveal().reveal(".s01-p03", { origin: "bottom", delay: "900" });
 
 // CONTACT
 

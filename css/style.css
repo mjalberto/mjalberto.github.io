@@ -7,11 +7,11 @@
   --primary-color-light: #665df5e6;
   --primary-color-dark: #544af4;
   --text: #58585d;
-  --text-dark: #161617;
   --text-light: #6b7280;
+  --text-dark: #161617;
   --extra-light: #f7f7f7;
-  --bg: #fdfdfd;
-  --bg-alt: #fff;
+  --light: #fdfdfd;
+  --light-alt: #fff;
   --font-Mulish: "Mulish", sans-serif;
   --font-Poppins: "Poppins", sans-serif;
   --font-PD: "Playfair Display", serif;
@@ -47,7 +47,7 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   font-family: var(--font-Poppins);
-  background-color: var(--bg);
+  background-color: var(--light);
   min-width: 320px;
   width: 100%;
   position: relative;
@@ -113,7 +113,7 @@ a {
 /* NAVIGATION BAR START */
 
 nav {
-  background-color: var(--bg);
+  background-color: var(--light);
   position: fixed;
   width: 100%;
   top: 0;
@@ -219,7 +219,7 @@ ul li a:hover {
 /* SECTION & CONTENT START */
 
 .section {
-  background-color: var(--bg);
+  background-color: var(--light);
 }
 
 .section__container {
@@ -312,7 +312,7 @@ p {
   }
 
   .image img {
-    width: min(15rem, 90%);
+    width: min(25rem, 50%);
   }
 
   .image {
