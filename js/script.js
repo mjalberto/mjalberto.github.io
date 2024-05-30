@@ -27,7 +27,7 @@ function checkScroll() {
 
 ScrollReveal({
   reset: true,
-  distance: "30%",
+  distance: "10%",
   duration: "1000",
   // delay: "200",
   // origin: "left",
