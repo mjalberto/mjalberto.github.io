@@ -9,8 +9,8 @@
     <script src="js/scrollreveal.js"></script>
     <title>MJ | Portfolio</title>
   </head>
-  <body id="body" class="body" onresize="checkScroll()">
-    <div id="container">
+  <body class="body" onresize="checkScroll()">
+    <div class="container">
       <nav>
         <div class="nav__content gpu">
           <div class="logo"><a href="#">MJ</a></div>
@@ -106,8 +106,8 @@
             <img src="assets/contact.svg" alt="Contact" />
           </div>
 
-          <div class="content gpu">
-            <h1 class="subtitle t-center sub03">CONTACT</h1>
+          <div class="contact-container gpu">
+            <!-- <h1 class="subtitle t-center sub03">CONTACT</h1>
             <p class="s03-p01">
               Ready to elevate your project with captivating visuals that leave
               a lasting impression? Look no further! Drop me a line at
@@ -116,7 +116,44 @@
               expressive illustrations, or captivating graphics, I've got the
               artistic chops to bring your ideas to life. Let's collaborate and
               turn your vision into a masterpiece!
-            </p>
+            </p> -->
+            <div class="contact-content">
+              <form
+                action="https://formspree.io/f/xeqybqzy"
+                method="POST"
+                class="contact-form"
+              >
+                <h1 class="subtitle t-center sub03">CONTACT</h1>
+                <input
+                  type="text"
+                  name="name"
+                  placeholder="Your Name"
+                  class="contact-inputs input01"
+                  autocomplete="off"
+                  required
+                />
+
+                <input
+                  type="email"
+                  name="email"
+                  placeholder="Your Email"
+                  class="contact-inputs input02"
+                  autocomplete="off"
+                  required
+                />
+
+                <textarea
+                  name="message"
+                  placeholder="Your Message"
+                  class="contact-inputs input03"
+                  required
+                ></textarea>
+
+                <div class="btn-container">
+                  <button type="submit" class="btn">Submit</button>
+                </div>
+              </form>
+            </div>
           </div>
         </div>
       </section>

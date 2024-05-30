@@ -48,12 +48,15 @@ ScrollReveal().reveal(".description", { origin: "bottom", delay: "1200" });
 
 ScrollReveal().reveal(".img02", { origin: "left", delay: "300" });
 ScrollReveal().reveal(".sub02", { origin: "right", delay: "600" });
-ScrollReveal().reveal(".s01-p01", { origin: "left", delay: "900" });
-ScrollReveal().reveal(".s01-p02", { origin: "right", delay: "900" });
-ScrollReveal().reveal(".s01-p03", { origin: "bottom", delay: "900" });
+ScrollReveal().reveal(".s01-p01", { origin: "right", delay: "700" });
+ScrollReveal().reveal(".s01-p02", { origin: "right", delay: "750" });
+ScrollReveal().reveal(".s01-p03", { origin: "right", delay: "800" });
 
 // CONTACT
 
 ScrollReveal().reveal(".img03", { origin: "left", delay: "300" });
 ScrollReveal().reveal(".sub03", { origin: "right", delay: "600" });
-ScrollReveal().reveal(".s03-p01", { origin: "bottom", delay: "900" });
+ScrollReveal().reveal(".input01", { origin: "right", delay: "700" });
+ScrollReveal().reveal(".input02", { origin: "right", delay: "750" });
+ScrollReveal().reveal(".input03", { origin: "right", delay: "800" });
+ScrollReveal().reveal(".btn", { origin: "bottom", delay: "900" });

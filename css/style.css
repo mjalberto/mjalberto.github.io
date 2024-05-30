@@ -275,6 +275,68 @@ p {
 
 /* CONTACT FORM START */
 
+.contact-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-width: 100%;
+}
+.contact-content {
+  min-width: 100%;
+}
+
+.contact-form {
+  min-width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+  gap: 1rem;
+}
+
+.contact-inputs {
+  font-family: var(--font-Poppins);
+  font-size: var(--fs-400);
+  color: var(--text);
+  padding: 1rem;
+  border: 1px solid var(--text-light);
+  border-radius: 3rem;
+  outline: none;
+  height: 3rem;
+  min-width: 90%;
+  transition: 0.3s ease;
+}
+
+.contact-inputs:focus {
+  border: 1px solid var(--primary-color);
+}
+
+.contact-form textarea {
+  min-width: 100%;
+  height: 10rem;
+  border-radius: 1rem;
+  resize: none;
+  overflow: hidden;
+}
+
+.btn-container {
+  min-width: 100%;
+  display: flex;
+  align-items: center;
+}
+
+.contact-form button {
+  font-family: var(--font-Poppins);
+  font-size: var(--fs-400);
+  color: var(--light);
+  background-color: var(--primary-color);
+  display: flex;
+  align-items: center;
+  padding: 1rem;
+  border: none;
+  border-radius: 2rem;
+  cursor: pointer;
+}
+
 /* CONTACT FORM END */
 
 /* MEDIA BREAKPOINT 750PX */
@@ -317,5 +379,13 @@ p {
 
   .image {
     grid-area: 1/1/2/2;
+  }
+
+  .contact-form {
+    align-items: center;
+  }
+
+  .contact-inputs {
+    min-width: 100%;
   }
 }
