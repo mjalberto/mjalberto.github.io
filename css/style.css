@@ -89,7 +89,7 @@ body {
 
 .landing {
   background-color: var(--primary-color);
-  min-height: 100svh;
+  min-height: 100dvh;
   padding: 1rem;
 }
 
@@ -223,7 +223,7 @@ ul li a:hover {
 }
 
 .section__container {
-  min-height: 100svh;
+  min-height: 100dvh;
   max-width: var(--max-width);
   margin: auto;
   padding: 1rem;
@@ -357,7 +357,7 @@ p {
   ul {
     position: fixed;
     width: 100%;
-    min-height: 100svh;
+    min-height: 100dvh;
     left: -100%;
     top: 0;
     background-color: var(--extra-light);
