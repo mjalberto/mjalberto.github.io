@@ -385,7 +385,8 @@ p {
     align-items: center;
   }
 
-  .contact-inputs {
+  .contact-inputs,
+  .contact-form textarea {
     min-width: 100%;
   }
 }
