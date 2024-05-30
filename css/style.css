@@ -311,7 +311,7 @@ p {
 }
 
 .contact-form textarea {
-  min-width: 100%;
+  min-width: 90%;
   height: 10rem;
   border-radius: 1rem;
   resize: none;
