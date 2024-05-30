@@ -5,10 +5,25 @@ function menu() {
 
   if (window.getComputedStyle(x).visibility === "visible") {
     x.classList.toggle("active");
+    document.body.classList.toggle("no-scroll");
   }
 }
 
-// SCROLL REVEAL GLOBAL
+// DISABLE SCROLLING WHEN HAM-MENU IS OPEN MOBILE
+
+function checkScroll() {
+  var x = document.getElementById("menu");
+  if (
+    x.classList.contains("active") &&
+    window.getComputedStyle(x).visibility === "visible"
+  ) {
+    document.body.classList.add("no-scroll");
+  } else {
+    document.body.classList.remove("no-scroll");
+  }
+}
+
+// SCROLL REVEAL ANIMATIONS GLOBAL
 
 ScrollReveal({
   reset: true,
@@ -34,8 +49,8 @@ ScrollReveal().reveal(".description", { origin: "bottom", delay: "1200" });
 ScrollReveal().reveal(".img02", { origin: "left", delay: "300" });
 ScrollReveal().reveal(".sub02", { origin: "right", delay: "600" });
 ScrollReveal().reveal(".s01-p01", { origin: "left", delay: "900" });
-ScrollReveal().reveal(".s01-p02", { origin: "right", delay: "1200" });
-ScrollReveal().reveal(".s01-p03", { origin: "bottom", delay: "1600" });
+ScrollReveal().reveal(".s01-p02", { origin: "right", delay: "1000" });
+ScrollReveal().reveal(".s01-p03", { origin: "bottom", delay: "1100" });
 
 // CONTACT
 
