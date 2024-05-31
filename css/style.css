@@ -384,6 +384,12 @@ p {
     z-index: -1;
   }
 
+  nav,
+  .nav__content {
+    min-height: 0;
+    height: auto;
+  }
+
   nav .ham4.active ~ ul {
     left: 0;
   }
