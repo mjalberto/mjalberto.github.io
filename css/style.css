@@ -48,6 +48,7 @@ body {
   -moz-osx-font-smoothing: grayscale;
   font-family: var(--font-Poppins);
   background-color: var(--light);
+  color: var(--text);
   min-width: 320px;
   width: 100%;
   position: relative;
@@ -267,7 +268,7 @@ ul li a:hover {
   font-size: var(--fs-400);
   line-height: 1.5rem;
   color: var(--text);
-  margin-bottom: 2rem;
+  /* margin-bottom: 2rem; */
 }
 
 p {
@@ -333,6 +334,7 @@ p {
 .contact-form .btn-container .btn {
   font-family: var(--font-Poppins);
   font-size: var(--fs-400);
+  font-weight: 400;
   color: var(--light);
   background-color: var(--primary-color);
   display: flex;
@@ -349,6 +351,9 @@ p {
 
 .contact-form .btn-container .btn:hover {
   background-color: var(--primary-color-light);
+}
+
+.btn-txt {
 }
 
 .send-icn {
