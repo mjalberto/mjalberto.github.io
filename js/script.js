@@ -34,6 +34,14 @@ ScrollReveal({
   // origin: "left",
 });
 
+// NAV
+
+ScrollReveal().reveal(".nav__content", {
+  reset: false,
+  origin: "top",
+  delay: "1350",
+});
+
 // SEPERATOR
 
 ScrollReveal().reveal(".seperator", { delay: "600" });
