@@ -37,6 +37,17 @@
   box-sizing: border-box;
 }
 
+body,
+input,
+textarea,
+select,
+button {
+  font-synthesis: none;
+  -moz-font-feature-settings: "kern";
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
 html,
 body {
   scroll-behavior: smooth;
@@ -44,8 +55,6 @@ body {
 }
 
 body {
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
   font-family: var(--font-Poppins);
   background-color: var(--light);
   color: var(--text);
@@ -56,7 +65,7 @@ body {
 
 .gpu {
   backface-visibility: hidden;
-  perspective: 1000;
+  /* perspective: 1000 !important; */
 }
 
 .no-scroll {
@@ -131,6 +140,8 @@ nav {
   align-items: center;
   justify-content: space-between;
   min-height: 10dvh;
+  -webkit-backface-visibility: hidden; /* Safari */
+  backface-visibility: hidden;
 }
 
 nav .logo a {
@@ -280,16 +291,6 @@ p {
 
 /* CONTACT FORM START */
 
-.contact-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-width: 100%;
-}
-.contact-content {
-  min-width: 100%;
-}
-
 .contact-form {
   min-width: 100%;
   display: flex;
@@ -310,10 +311,16 @@ p {
   height: 3rem;
   width: 90%;
   transition: 0.5s ease;
+  backface-visibility: hidden;
+}
+
+.contact-inputs::placeholder {
+  backface-visibility: hidden;
 }
 
 .contact-inputs:focus {
   border: 1px solid var(--primary-color);
+  backface-visibility: hidden;
 }
 
 .contact-form textarea {
@@ -351,9 +358,6 @@ p {
 
 .contact-form .btn-container .btn:hover {
   background-color: var(--primary-color-light);
-}
-
-.btn-txt {
 }
 
 .send-icn {

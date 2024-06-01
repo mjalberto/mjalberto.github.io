@@ -13,7 +13,7 @@
   <body class="body" onresize="checkScroll()">
     <div class="container">
       <nav>
-        <div class="nav__content gpu">
+        <div class="nav__content">
           <div class="logo"><a href="#">MJ</a></div>
           <svg
             class="ham hamRotate ham4"
@@ -43,7 +43,7 @@
 
       <section class="section" id="home">
         <div class="section__container">
-          <div class="content gpu">
+          <div class="content">
             <p class="subtitle sub01">HELLO</p>
             <p class="title">
               I'm <span class="mj">MJ<br /></span>a Graphic Artist
@@ -72,7 +72,7 @@
             <img src="assets/design.svg" alt="Design Process" />
           </div>
 
-          <div class="content gpu">
+          <div class="content">
             <h1 class="subtitle t-center sub02">ABOUT</h1>
             <p class="s01-p01 par">
               For me, graphic design is more than just a job—it's a creative
@@ -107,20 +107,20 @@
             <img src="assets/contact01.svg" alt="Contact" />
           </div>
 
-          <div class="contact-container gpu">
-            <div class="contact-content gpu">
+          <div class="content">
               <h1 class="subtitle t-center sub03">CONTACT</h1>
               <form
                 action="https://formspree.io/f/xeqybqzy"
                 method="POST"
-                class="contact-form gpu"
+                class="contact-form"
               >
                 <input
                   type="text"
                   name="name"
                   placeholder="Your Name"
-                  class="contact-inputs input01 gpu"
+                  class="contact-inputs input01"
                   autocomplete="off"
+                  aria-autocomplete="none"
                   required
                 />
 
@@ -128,23 +128,24 @@
                   type="email"
                   name="email"
                   placeholder="Your Email"
-                  class="contact-inputs input02 gpu"
+                  class="contact-inputs input02"
                   autocomplete="off"
+                  aria-autocomplete="none"
                   required
                 />
 
                 <textarea
                   name="message"
                   placeholder="Your Message"
-                  class="contact-inputs input03 gpu"
+                  class="contact-inputs input03"
+                  aria-autocomplete="none"
                   required
                 ></textarea>
 
-                <div class="btn-container gpu">
-                  <button type="submit" class="btn gpu">Send</button>
+                <div class="btn-container">
+                  <button type="submit" class="btn">Send</button>
                 </div>
               </form>
-            </div>
           </div>
         </div>
       </section>

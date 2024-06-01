@@ -27,6 +27,7 @@ function checkScroll() {
 
 ScrollReveal({
   reset: true,
+  cleanup: true,
   distance: "10%",
   duration: "1000",
   // delay: "200",
@@ -56,7 +57,4 @@ ScrollReveal().reveal(".s01-p03", { origin: "right", delay: "800" });
 
 ScrollReveal().reveal(".img03", { origin: "left", delay: "300" });
 ScrollReveal().reveal(".sub03", { origin: "right", delay: "600" });
-ScrollReveal().reveal(".input01", { origin: "right", delay: "700" });
-ScrollReveal().reveal(".input02", { origin: "right", delay: "750" });
-ScrollReveal().reveal(".input03", { origin: "right", delay: "800" });
-ScrollReveal().reveal(".btn", { origin: "bottom", delay: "900" });
+ScrollReveal().reveal(".contact-form", { origin: "right", delay: "700" });
