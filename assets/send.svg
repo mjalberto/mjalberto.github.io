@@ -1,18 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Generator: Adobe Illustrator 28.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
-<svg version="1.1" id="Layer_1" xmlns:sketch="http://www.bohemiancoding.com/sketch/ns"
-	 xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 800 800"
-	 style="enable-background:new 0 0 800 800;" xml:space="preserve">
+<!-- Generator: Adobe Illustrator 28.3.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 viewBox="0 0 19.5 19.51" style="enable-background:new 0 0 19.5 19.51;" xml:space="preserve">
 <style type="text/css">
-	.st0{fill-rule:evenodd;clip-rule:evenodd;fill:#FDFDFD;}
+	.st0{fill:#FDFDFD;}
 </style>
-<g id="Page-1" sketch:type="MSPage">
-	<g id="Icon-Set" transform="translate(-308.000000, -1087.000000)" sketch:type="MSLayerGroup">
-		<path id="arrow-right-circle" sketch:type="MSShapeGroup" class="st0" d="M708,1837c-193.3,0-350-156.8-350-350s156.7-350,350-350
-			s350,156.8,350,350S901.3,1837,708,1837L708,1837z M708,1087c-220.9,0-400,179-400,400s179.1,400,400,400s400-179,400-400
-			S928.9,1087,708,1087L708,1087z M871.4,1465L730,1323.5c-9.8-9.8-25.6-9.8-35.4,0c-9.8,10-9.8,25.8,0,35.5l103,103H533
-			c-13.8,0-25,11.2-25,25s11.2,25,25,25h264.6l-103,103c-9.8,9.8-9.8,25.8,0,35.5c9.8,9.8,25.6,9.8,35.4,0L871.4,1509
-			c6-6,7.9-14.2,6.5-22C879.3,1479.2,877.4,1471,871.4,1465L871.4,1465z"/>
-	</g>
-</g>
+<path class="st0" d="M10.57,9.95l-7.53,1.26c-0.18,0.03-0.32,0.15-0.39,0.32l-2.6,6.96c-0.25,0.64,0.42,1.25,1.03,0.94l18-9
+	c0.55-0.28,0.55-1.07,0-1.34l-18-9C0.47-0.23-0.2,0.38,0.05,1.02l2.6,6.96C2.71,8.15,2.86,8.27,3.04,8.3l7.53,1.26
+	c0.11,0.02,0.18,0.12,0.16,0.23C10.72,9.87,10.65,9.94,10.57,9.95z"/>
 </svg>

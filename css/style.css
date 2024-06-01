@@ -1,6 +1,7 @@
 @import url("https://fonts.googleapis.com/css2?family=Mulish:ital,wght@0,200..1000;1,200..1000&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap");
 
 :root {
   --primary-color: #665df5;
@@ -14,20 +15,21 @@
   --light-alt: #fff;
   --font-Mulish: "Mulish", sans-serif;
   --font-Poppins: "Poppins", sans-serif;
+  --font-Inter: "Inter", sans-serif;
   --font-PD: "Playfair Display", serif;
   --max-width: 1200px;
-  --fs-600: 2.188rem;
-  --fs-500: 1.875rem;
-  --fs-400: 1.125rem;
+  --fs-600: calc(2.188rem + 0.390625vw);
+  --fs-500: calc(1.875rem + 0.390625vw);
+  --fs-400: calc(1.125rem + 0.390625vw);
 }
 
 /* MOBILE FONT SIZES */
 
 @media (width < 480px) {
   :root {
-    --fs-600: 1.313rem;
-    --fs-500: 1.125rem;
-    --fs-400: 1rem;
+    --fs-600: calc(1.313rem + 0.390625vw);
+    --fs-500: calc(1.125rem + 0.390625vw);
+    --fs-400: calc(1rem + 0.390625vw);
   }
 }
 
@@ -261,7 +263,7 @@ ul li a:hover {
 
 .description {
   font-size: var(--fs-400);
-  line-height: 1.5rem;
+  line-height: 1.5;
   color: var(--text);
   /* margin-bottom: 2rem; */
 }
@@ -288,7 +290,7 @@ p {
   font-size: var(--fs-400);
   background-color: var(--extra-light);
   color: var(--text);
-  padding: 1rem;
+  padding: 2rem;
   border: 1px solid var(--text-light);
   border-radius: 3rem;
   outline: none;
@@ -301,9 +303,13 @@ p {
   border: 1px solid var(--primary-color);
 }
 
+.contact-inputs::placeholder {
+  color: var(--text-light);
+}
+
 .contact-form textarea {
   width: 90%;
-  height: 10rem;
+  height: 15rem;
   border-radius: 1rem;
   resize: none;
   overflow: hidden;
@@ -325,9 +331,9 @@ p {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 8rem;
+  width: 10rem;
   height: 3rem;
-  padding: 1rem;
+  padding: 2rem;
   border: none;
   border-radius: 3rem;
   cursor: pointer;
@@ -338,10 +344,9 @@ p {
   background-color: var(--primary-color-light);
 }
 
-.send-icn {
-  padding-left: 0.5rem;
-  margin-right: -0.5rem;
-  width: 2rem;
+.send-icon {
+  margin-left: 1rem;
+  width: 1.5rem;
 }
 
 /* CONTACT FORM END */
@@ -401,9 +406,19 @@ p {
   .contact-inputs,
   .contact-form textarea {
     width: 100%;
+    padding: 1rem;
   }
 
   .btn-container {
     width: 100%;
+  }
+
+  .contact-form .btn-container .btn {
+    padding: 1rem;
+    width: 8rem;
+  }
+
+  .send-icon {
+    width: 1rem;
   }
 }
