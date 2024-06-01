@@ -34,14 +34,6 @@ ScrollReveal({
   // origin: "left",
 });
 
-// NAV
-
-ScrollReveal().reveal(".nav__content", {
-  reset: false,
-  origin: "top",
-  delay: "1350",
-});
-
 // SEPERATOR
 
 ScrollReveal().reveal(".seperator", { delay: "600" });
@@ -51,7 +43,7 @@ ScrollReveal().reveal(".seperator", { delay: "600" });
 ScrollReveal().reveal(".img01", { origin: "right", delay: "300" });
 ScrollReveal().reveal(".sub01", { origin: "left", delay: "600" });
 ScrollReveal().reveal(".title", { origin: "right", delay: "900" });
-ScrollReveal().reveal(".description", { origin: "bottom", delay: "1200" });
+ScrollReveal().reveal(".home-d01", { origin: "bottom", delay: "1200" });
 
 // ABOUT
 
