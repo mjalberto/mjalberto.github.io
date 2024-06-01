@@ -35,21 +35,10 @@
   padding: 0;
   margin: 0;
   box-sizing: border-box;
+  box-sizing: border-box;
 }
 
-body,
-input,
-textarea,
-select,
-button {
-  font-synthesis: none;
-  -moz-font-feature-settings: "kern";
- -webkit-font-smoothing: antialiased; 
-  -moz-osx-font-smoothing: grayscale;
-}
-
-html,
-body {
+html {
   scroll-behavior: smooth;
   overflow-x: hidden;
 }
@@ -61,11 +50,8 @@ body {
   min-width: 320px;
   width: 100%;
   position: relative;
-}
-
-.gpu {
-  backface-visibility: hidden;
-  /* perspective: 1000 !important; */
+  scroll-behavior: smooth;
+  overflow-x: hidden;
 }
 
 .no-scroll {
@@ -140,8 +126,6 @@ nav {
   align-items: center;
   justify-content: space-between;
   min-height: 10dvh;
-  -webkit-backface-visibility: hidden; /* Safari */
-  backface-visibility: hidden;
 }
 
 nav .logo a {
@@ -311,10 +295,6 @@ p {
   height: 3rem;
   width: 90%;
   transition: 0.5s ease;
-}
-
-.contact-inputs::placeholder {
-  backface-visibility: hidden;
 }
 
 .contact-inputs:focus {
