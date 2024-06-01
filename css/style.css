@@ -44,7 +44,7 @@ select,
 button {
   font-synthesis: none;
   -moz-font-feature-settings: "kern";
-  -webkit-font-smoothing: antialiased;
+ -webkit-font-smoothing: antialiased; 
   -moz-osx-font-smoothing: grayscale;
 }
 
@@ -311,7 +311,6 @@ p {
   height: 3rem;
   width: 90%;
   transition: 0.5s ease;
-  backface-visibility: hidden;
 }
 
 .contact-inputs::placeholder {
@@ -320,7 +319,6 @@ p {
 
 .contact-inputs:focus {
   border: 1px solid var(--primary-color);
-  backface-visibility: hidden;
 }
 
 .contact-form textarea {
