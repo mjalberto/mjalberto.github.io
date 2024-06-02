@@ -44,7 +44,7 @@ html {
 }
 
 body {
-  font-family: var(--font-Poppins);
+  font-family: var(--font-Mulish);
   background-color: var(--light);
   color: var(--text);
   min-width: 320px;
@@ -150,7 +150,7 @@ ul {
 }
 
 ul li a {
-  font-family: var(--font-Poppins);
+  font-family: var(--font-Mulish);
   font-size: var(--fs-400);
   font-weight: 600;
   color: var(--text);
@@ -300,7 +300,7 @@ p {
 }
 
 .contact-inputs {
-  font-family: var(--font-Poppins);
+  font-family: var(--font-Mulish);
   font-size: var(--fs-400);
   background-color: var(--extra-light);
   color: var(--text);
@@ -337,7 +337,7 @@ p {
 }
 
 .contact-form .btn-container .btn {
-  font-family: var(--font-Poppins);
+  font-family: var(--font-Mulish);
   font-size: var(--fs-400);
   font-weight: 400;
   color: var(--light);
