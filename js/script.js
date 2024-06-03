@@ -53,8 +53,14 @@ ScrollReveal().reveal(".s01-p01", { origin: "right", delay: "700" });
 ScrollReveal().reveal(".s01-p02", { origin: "right", delay: "750" });
 ScrollReveal().reveal(".s01-p03", { origin: "right", delay: "800" });
 
+//
+
+// PORTFOLIO
+
+ScrollReveal().reveal(".sub03", { origin: "right", delay: "600" });
+
 // CONTACT
 
-ScrollReveal().reveal(".img03", { origin: "left", delay: "300" });
-ScrollReveal().reveal(".sub03", { origin: "right", delay: "600" });
+ScrollReveal().reveal(".img04", { origin: "left", delay: "300" });
+ScrollReveal().reveal(".sub04", { origin: "right", delay: "600" });
 ScrollReveal().reveal(".contact-form", { origin: "right", delay: "700" });
