@@ -58,6 +58,7 @@ ScrollReveal().reveal(".s01-p03", { origin: "right", delay: "800" });
 // PORTFOLIO
 
 ScrollReveal().reveal(".sub03", { origin: "right", delay: "600" });
+ScrollReveal().reveal(".gallery", { origin: "right", delay: "900" });
 
 // CONTACT
 
