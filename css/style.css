@@ -209,10 +209,6 @@ ul li a:hover {
 
 /* SECTION & CONTENT START */
 
-.section {
-  background-color: var(--light);
-}
-
 .section__container {
   min-height: 100dvh;
   max-width: var(--max-width);
