@@ -58,6 +58,18 @@ body {
   overflow-x: hidden;
 }
 
+.wave-bg {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100lvh;
+  box-sizing: border-box;
+  display: block;
+  background-color: #fdfdfd;
+  z-index: -1;
+}
+
 .no-scroll {
   touch-action: none;
   overflow: hidden;
