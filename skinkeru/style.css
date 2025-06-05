@@ -56,13 +56,24 @@ h2 {
 .notes {
   margin-top: 2rem;
   background-color: #f0f8ff;
-  padding: 1rem;
+  padding: 2rem;
   border-left: 4px solid #1a73e8;
   border-radius: 4px;
 }
 
 .notes p {
   margin: 0.5rem 0;
+}
+
+.emoji-img {
+  width: 1.6em;
+  height: 1.6em;
+  vertical-align: middle;
+  margin-right: 0.3em;
+}
+
+.emoji-align {
+  margin-bottom: 0.8em;
 }
 
 @media (max-width: 600px) {
