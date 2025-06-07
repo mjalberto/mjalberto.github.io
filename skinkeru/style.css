@@ -3,7 +3,7 @@
   --bg: #f2f2f7; /* systemGray6 */
   --surface: rgba(255, 255, 255, 0.4);
   --panel: rgba(255, 255, 255, 0.25);
-  --text-primary: #000000; /* label */
+  --text-primary: #1d1d1f; /* label */
   --text-secondary: #3c3c43; /* secondaryLabel */
   --accent-blue: #007aff; /* systemBlue */
   --shadow: rgba(0, 0, 0, 0.1);
