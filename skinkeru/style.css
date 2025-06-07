@@ -1,90 +1,110 @@
+/* Palette */
+:root {
+  --bg: #f2f2f7; /* systemGray6 */
+  --surface: rgba(255, 255, 255, 0.4);
+  --panel: rgba(255, 255, 255, 0.25);
+  --text-primary: #000000; /* label */
+  --text-secondary: #3c3c43; /* secondaryLabel */
+  --accent-blue: #007aff; /* systemBlue */
+  --shadow: rgba(0, 0, 0, 0.1);
+}
+
+/* Page background */
 body {
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica,
-    Arial, sans-serif;
   margin: 0;
   padding: 0;
-  background-color: #fafafa;
-  color: #37384a;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica,
+    Arial, sans-serif;
+  background: var(--bg);
+  color: var(--text-primary);
+  min-height: 100vh;
+  /* Optional subtle gradient to help glass pop */
+  background: linear-gradient(135deg, #ececf0, #f7f7fa);
 }
 
+/* Frosted container */
 .container {
   max-width: 700px;
-  margin: 0 auto;
+  margin: 2rem auto;
   padding: 2rem;
-  background: #fafafa;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
-  border-radius: 8px;
+  background: var(--surface);
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  box-shadow: 0 8px 32px var(--shadow);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
 }
 
+/* Headings */
 h1 {
-  font-size: 2.2rem;
   text-align: center;
-  margin-bottom: 0.5rem;
+  color: var(--text-primary);
 }
-
 h1 span {
-  color: #37384a;
+  color: var(--text-secondary);
   font-weight: 300;
 }
-
 hr {
-  margin: 1rem 0 2rem;
   border: none;
-  border-top: 2px solid #eee;
+  border-top: 2px solid var(--text-secondary);
 }
 
+/* Section titles */
 h2 {
-  font-size: 1.5rem;
   margin-top: 2rem;
-  color: #37384a;
+  color: var(--text-primary);
 }
 
+/* Frosted step cards */
 .step {
+  background: var(--panel);
+  padding: 1rem;
   margin-bottom: 1rem;
-  line-height: 1.5;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  box-shadow: 0 4px 24px var(--shadow);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
 }
-
 .step a {
-  color: #1a73e8;
+  color: var(--accent-blue);
   text-decoration: none;
 }
-
 .step a:hover {
   text-decoration: underline;
 }
 
+/* Frosted notes */
 .notes {
-  margin-top: 2rem;
-  background-color: #f0f8ff;
+  background: var(--panel);
   padding: 2rem;
-  border-left: 4px solid #1a73e8;
-  border-radius: 4px;
+  margin-top: 2rem;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  box-shadow: inset 0 4px 16px var(--shadow);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
 }
 
-.notes p {
-  margin: 0.5rem 0;
-}
-
+/* Emojis */
 .emoji-img {
   width: 1.6em;
   height: 1.6em;
   vertical-align: middle;
   margin-right: 0.3em;
 }
-
 .emoji-align {
   margin-bottom: 0.8em;
 }
 
+/* Mobile tweaks */
 @media (max-width: 600px) {
   .container {
     padding: 1rem;
   }
-
   h1 {
     font-size: 1.8rem;
   }
-
   h2 {
     font-size: 1.25rem;
   }
