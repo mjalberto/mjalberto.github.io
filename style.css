@@ -14,6 +14,7 @@ body {
     linear-gradient(336deg, rgba(255, 191, 138), rgba(0, 0, 255, 0) 70.71%);
   display: flex;
   justify-content: center;
+  padding: 0 1rem;
 }
 .hello__div {
   display: flex;
