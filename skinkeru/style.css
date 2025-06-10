@@ -23,6 +23,7 @@ body {
 }
 
 #bg-video {
+  filter: blur(1.5rem);
   position: fixed;
   top: 0;
   left: 0;
