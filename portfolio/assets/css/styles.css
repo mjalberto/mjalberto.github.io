@@ -295,7 +295,7 @@ body.dark-theme {
 .nav__toggle {
   width: 32px;
   height: 32px;
-  background-color: var(--black-color);
+  background-color: var(--first-color);
   color: var(--white-color);
   display: grid;
   place-items: center;
@@ -491,8 +491,7 @@ body.dark-theme {
 }
 
 .home__social-link {
-  background-color: var(--black-color-light);
-  color: var(--white-color);
+  color: var(--black-color);
   font-size: 1.25rem;
   width: 40px;
   height: 40px;
@@ -504,7 +503,7 @@ body.dark-theme {
 }
 
 .home__social-link:hover {
-  background-color: var(--black-color);
+  color: var(--first-color);
   transform: translateY(-4px);
 }
 
@@ -537,7 +536,7 @@ body.dark-theme {
 }
 
 .home__scroll-box {
-  background-color: var(--black-color);
+  background-color: var(--first-color);
   color: var(--white-color);
   width: 36px;
   height: 36px;
@@ -1051,9 +1050,9 @@ body.dark-theme {
 }
 
 .contact__social-link {
-  background-color: var(--black-color-light);
-  padding: 6px;
+  background-color: var(--black-color);
   color: var(--white-color);
+  padding: 6px;
   font-size: 1.25rem;
   display: grid;
   place-items: center;
@@ -1061,7 +1060,7 @@ body.dark-theme {
 }
 
 .contact__social-link:hover {
-  background-color: var(--first-color);
+  color: var(--first-color);
 }
 
 .contact__message {
@@ -1293,8 +1292,8 @@ body.dark-theme {
   }
 
   .nav__link-button {
-    background-color: var(--black-color);
-    color: var(--white-color);
+    background-color: var(--first-color-light);
+    color: var(--black-color);
     padding: 1.1rem 1.5rem;
     transition:
       background-color 0.3s,
@@ -1303,6 +1302,7 @@ body.dark-theme {
 
   .nav__link-button:hover {
     background-color: var(--first-color);
+    color: var(--white-color);
     transform: scale(1.05);
   }
 
