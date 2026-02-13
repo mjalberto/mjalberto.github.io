@@ -16,11 +16,11 @@
   --first-color-dark-opacity: hsla(243, 68%, 48%, 0.3);
   --first-color-transparent: hsla(243, 68%, 48%, 0);
 
-  --black-color: hsl(73, 76%, 5%);
+  --black-color: hsl(247, 75%, 5%);
   --black-color-light: hsl(0, 0%, 40%);
   --white-color: hsl(0, 0%, 95%);
   --title-color: hsl(247, 75%, 5%);
-  --text-color: hsl(0, 0%, 35%);
+  --text-color: hsl(247, 75%, 20%);
   --text-color-light: hsl(240, 60%, 99%);
   --body-color: hsl(240, 60%, 99%);
   --container-color: hsl(240, 13%, 94%);
