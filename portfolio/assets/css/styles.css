@@ -1119,7 +1119,7 @@ body.dark-theme {
   font-size: 1.25rem;
   display: grid;
   place-items: center;
-  transition: background-color 0.3s;
+  transition: color 0.3s;
 }
 
 .contact__social-link:hover {
