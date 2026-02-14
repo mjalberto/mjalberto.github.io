@@ -1309,6 +1309,7 @@ body.dark-theme {
 
   .section {
     padding-block: 7rem 2rem;
+    min-height: 100svh;
   }
 
   .section__title-1::after,
@@ -1719,5 +1720,11 @@ body.dark-theme {
 
   .scrollup {
     right: 3rem;
+  }
+}
+
+@media all and (display-mode: fullscreen) {
+  .home {
+    margin-top: 0;
   }
 }
