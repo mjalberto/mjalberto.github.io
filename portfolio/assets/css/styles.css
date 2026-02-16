@@ -1772,7 +1772,7 @@ body.dark-theme {
 
 .slider__container {
   display: flex;
-  transition: transform 0.5s ease;
+  transition: transform 0.5s ease-in-out;
   width: 100%;
 }
 
@@ -1802,8 +1802,8 @@ body.dark-theme {
 }
 
 .slider__dot {
-  width: 5px;
-  height: 5px;
+  width: 6px;
+  height: 6px;
   border-radius: 50%;
   background-color: var(--text-color);
   cursor: pointer;
@@ -1812,7 +1812,7 @@ body.dark-theme {
 }
 
 .slider__dot.active {
-  background-color: var(--accent-color);
+  background-image: var(--title-color);
   width: 1rem;
   border-radius: 5px;
   box-shadow: none;
@@ -1898,8 +1898,8 @@ body.dark-theme {
   }
 
   .slider__dot {
-    width: 5px;
-    height: 5px;
+    width: 6px;
+    height: 6px;
   }
 
   .slider__dot.active {
