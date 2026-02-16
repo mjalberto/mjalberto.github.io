@@ -269,8 +269,12 @@ const prevSlide = () => {
   updateSliderPosition();
 };
 
-// Close slider
+// Close slider — reset to first slide then hide
 const closeSlider = () => {
+  // reset to first slide so next open starts at page 1
+  currentSlideIndex = 0;
+  updateSliderPosition();
+
   sliderModal.classList.remove("active");
   document.body.style.overflow = "";
 };
@@ -281,6 +285,29 @@ projectButtons.forEach((button) => {
     e.preventDefault();
     const projectIndex = parseInt(button.dataset.project);
     initializeSlider(projectIndex);
+  });
+});
+
+// Also allow .projects__link anchors to open the corresponding project slider
+const projectLinks = document.querySelectorAll('.projects__link');
+projectLinks.forEach((link) => {
+  link.addEventListener('click', (e) => {
+    e.preventDefault();
+    const card = link.closest('.projects__card');
+    if (!card) return;
+
+    // Prefer explicit data-project on the card's button if present
+    const btn = card.querySelector('.projects__button');
+    let projectIndex = null;
+    if (btn && btn.dataset && btn.dataset.project) {
+      projectIndex = parseInt(btn.dataset.project);
+    } else {
+      // Fallback: determine index by card position
+      const cards = Array.from(document.querySelectorAll('.projects__card'));
+      projectIndex = cards.indexOf(card);
+    }
+
+    if (projectIndex >= 0) initializeSlider(projectIndex);
   });
 });
 
