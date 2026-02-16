@@ -600,7 +600,7 @@ body.dark-theme {
 }
 
 .button {
-  background: black;
+  background-color: var(--black-color);
   padding: 1.1rem 1.5rem;
   color: var(--white-color);
   font-weight: var(--font-medium);
