@@ -160,3 +160,146 @@ sr.reveal(
   { origin: `left` },
 );
 sr.reveal(`.services__card, .projects__card`, { interval: `100` });
+
+/*=============== IMAGE SLIDER ===============*/
+// Project data - Specify the project folder and number of images
+// Example: proj-01 folder contains proj-img-01.jpg, proj-img-02.jpg, etc.
+const projectsData = [
+  { title: "Sample Work", folder: "proj-01", imageCount: 3 },
+  { title: "Sample Project", folder: "proj-02", imageCount: 3 },
+  { title: "Sample Project", folder: "proj-03", imageCount: 3 },
+  { title: "Sample Project", folder: "proj-04", imageCount: 3 },
+  { title: "Sample Project", folder: "proj-05", imageCount: 3 },
+];
+
+// Function to generate image paths
+const generateImagePaths = (folder, imageCount) => {
+  const images = [];
+  for (let i = 1; i <= imageCount; i++) {
+    const paddedNumber = String(i).padStart(2, "0");
+    images.push(`assets/img/${folder}/proj-img-${paddedNumber}.jpg`);
+  }
+  return images;
+};
+
+// Slider variables
+const sliderModal = document.getElementById("slider-modal");
+const sliderContainer = document.getElementById("slider-container");
+const sliderIndicator = document.getElementById("slider-indicator");
+const sliderClose = document.getElementById("slider-close");
+const sliderPrev = document.getElementById("slider-prev");
+const sliderNext = document.getElementById("slider-next");
+const projectButtons = document.querySelectorAll(".projects__button");
+
+let currentProjectIndex = 0;
+let currentSlideIndex = 0;
+let totalSlides = 0;
+
+// Initialize slider
+const initializeSlider = (projectIndex) => {
+  currentProjectIndex = projectIndex;
+  currentSlideIndex = 0;
+  const project = projectsData[projectIndex];
+  const images = generateImagePaths(project.folder, project.imageCount);
+  totalSlides = images.length;
+
+  // Clear previous slides
+  sliderContainer.innerHTML = "";
+  sliderIndicator.innerHTML = "";
+
+  // Create slides
+  images.forEach((image) => {
+    const slide = document.createElement("div");
+    slide.className = "slider__slide";
+    slide.innerHTML = `<img src="${image}" alt="Project image">`;
+    sliderContainer.appendChild(slide);
+  });
+
+  // Create indicator dots
+  images.forEach((_, index) => {
+    const dot = document.createElement("button");
+    dot.className = `slider__dot ${index === 0 ? "active" : ""}`;
+    dot.addEventListener("click", () => goToSlide(index));
+    sliderIndicator.appendChild(dot);
+  });
+
+  // Open modal
+  sliderModal.classList.add("active");
+  document.body.style.overflow = "hidden";
+  updateSliderPosition();
+};
+
+// Update slider position
+const updateSliderPosition = () => {
+  const offset = -currentSlideIndex * 100;
+  sliderContainer.style.transform = `translateX(${offset}%)`;
+
+  // Update active dot
+  const dots = document.querySelectorAll(".slider__dot");
+  dots.forEach((dot, index) => {
+    dot.classList.toggle("active", index === currentSlideIndex);
+  });
+};
+
+// Go to specific slide
+const goToSlide = (index) => {
+  if (index >= 0 && index < totalSlides) {
+    currentSlideIndex = index;
+    updateSliderPosition();
+  }
+};
+
+// Next slide
+const nextSlide = () => {
+  if (currentSlideIndex < totalSlides - 1) {
+    currentSlideIndex++;
+  } else {
+    currentSlideIndex = 0;
+  }
+  updateSliderPosition();
+};
+
+// Previous slide
+const prevSlide = () => {
+  if (currentSlideIndex > 0) {
+    currentSlideIndex--;
+  } else {
+    currentSlideIndex = totalSlides - 1;
+  }
+  updateSliderPosition();
+};
+
+// Close slider
+const closeSlider = () => {
+  sliderModal.classList.remove("active");
+  document.body.style.overflow = "";
+};
+
+// Event listeners for slider
+projectButtons.forEach((button) => {
+  button.addEventListener("click", (e) => {
+    e.preventDefault();
+    const projectIndex = parseInt(button.dataset.project);
+    initializeSlider(projectIndex);
+  });
+});
+
+sliderClose.addEventListener("click", closeSlider);
+sliderPrev.addEventListener("click", prevSlide);
+sliderNext.addEventListener("click", nextSlide);
+
+// Close slider on backdrop click
+sliderModal.addEventListener("click", (e) => {
+  if (e.target === sliderModal) {
+    closeSlider();
+  }
+});
+
+// Keyboard navigation
+document.addEventListener("keydown", (e) => {
+  if (!sliderModal.classList.contains("active")) return;
+
+  if (e.key === "Escape") closeSlider();
+  if (e.key === "ArrowLeft") prevSlide();
+  if (e.key === "ArrowRight") nextSlide();
+});

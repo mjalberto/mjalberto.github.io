@@ -308,9 +308,9 @@
                 class="projects__img"
               />
 
-              <a href="#" class="projects__button button">
+              <button class="projects__button button" data-project="0">
                 <i class="ri-arrow-right-up-line"></i>
-              </a>
+              </button>
             </div>
 
             <div class="projects__content">
@@ -350,9 +350,9 @@
                 class="projects__img"
               />
 
-              <a href="#" class="projects__button button">
+              <button class="projects__button button" data-project="1">
                 <i class="ri-arrow-right-up-line"></i>
-              </a>
+              </button>
             </div>
 
             <div class="projects__content">
@@ -392,9 +392,9 @@
                 class="projects__img"
               />
 
-              <a href="#" class="projects__button button">
+              <button class="projects__button button" data-project="2">
                 <i class="ri-arrow-right-up-line"></i>
-              </a>
+              </button>
             </div>
 
             <div class="projects__content">
@@ -434,9 +434,9 @@
                 class="projects__img"
               />
 
-              <a href="#" class="projects__button button">
+              <button class="projects__button button" data-project="3">
                 <i class="ri-arrow-right-up-line"></i>
-              </a>
+              </button>
             </div>
 
             <div class="projects__content">
@@ -476,9 +476,9 @@
                 class="projects__img"
               />
 
-              <a href="#" class="projects__button button">
+              <button class="projects__button button" data-project="4">
                 <i class="ri-arrow-right-up-line"></i>
-              </a>
+              </button>
             </div>
 
             <div class="projects__content">
@@ -682,6 +682,34 @@
     <a href="#" class="scrollup" id="scroll-up">
       <i class="ri-arrow-up-s-line"></i>
     </a>
+
+    <!-- IMAGE SLIDER MODAL -->
+    <div class="slider-modal" id="slider-modal">
+      <div class="slider-modal__content">
+        <!-- Close button -->
+        <button class="slider-modal__close" id="slider-close">
+          <i class="ri-close-line"></i>
+        </button>
+
+        <!-- Slider container -->
+        <div class="slider-modal__body">
+          <div class="slider__wrapper">
+            <div class="slider__container" id="slider-container"></div>
+
+            <!-- Navigation arrows (inside image wrapper) -->
+            <button class="slider__arrow slider__arrow--prev" id="slider-prev">
+              <i class="ri-arrow-left-s-line"></i>
+            </button>
+            <button class="slider__arrow slider__arrow--next" id="slider-next">
+              <i class="ri-arrow-right-s-line"></i>
+            </button>
+          </div>
+
+          <!-- Page indicator -->
+          <div class="slider__indicator" id="slider-indicator"></div>
+        </div>
+      </div>
+    </div>
 
     <!-- SCROLLREVEAL -->
     <script src="https://unpkg.com/scrollreveal@4.0.0/dist/scrollreveal.min.js"></script>
