@@ -168,7 +168,7 @@ const projectsData = [
   { title: "Object Recoloring Study", folder: "proj-01", imageCount: 4 },
   { title: "Product Durability Marks", folder: "proj-02", imageCount: 4 },
   { title: "Material Swap", folder: "proj-03", imageCount: 3 },
-  { title: "Sample Project", folder: "proj-04", imageCount: 3 },
+  { title: "Lights Compositing", folder: "proj-04", imageCount: 5 },
   { title: "Sample Project", folder: "proj-05", imageCount: 3 },
 ];
 
