@@ -165,8 +165,8 @@ sr.reveal(`.services__card, .projects__card`, { interval: `100` });
 // Project data - Specify the project folder and number of images
 // Example: proj-01 folder contains proj-img-01.jpg, proj-img-02.jpg, etc.
 const projectsData = [
-  { title: "Sample Work", folder: "proj-01", imageCount: 3 },
-  { title: "Sample Project", folder: "proj-02", imageCount: 3 },
+  { title: "Object Recoloring Study", folder: "proj-01", imageCount: 4 },
+  { title: "Product Durability Marks", folder: "proj-02", imageCount: 4 },
   { title: "Sample Project", folder: "proj-03", imageCount: 3 },
   { title: "Sample Project", folder: "proj-04", imageCount: 3 },
   { title: "Sample Project", folder: "proj-05", imageCount: 3 },
@@ -289,21 +289,21 @@ projectButtons.forEach((button) => {
 });
 
 // Also allow .projects__link anchors to open the corresponding project slider
-const projectLinks = document.querySelectorAll('.projects__link');
+const projectLinks = document.querySelectorAll(".projects__link");
 projectLinks.forEach((link) => {
-  link.addEventListener('click', (e) => {
+  link.addEventListener("click", (e) => {
     e.preventDefault();
-    const card = link.closest('.projects__card');
+    const card = link.closest(".projects__card");
     if (!card) return;
 
     // Prefer explicit data-project on the card's button if present
-    const btn = card.querySelector('.projects__button');
+    const btn = card.querySelector(".projects__button");
     let projectIndex = null;
     if (btn && btn.dataset && btn.dataset.project) {
       projectIndex = parseInt(btn.dataset.project);
     } else {
       // Fallback: determine index by card position
-      const cards = Array.from(document.querySelectorAll('.projects__card'));
+      const cards = Array.from(document.querySelectorAll(".projects__card"));
       projectIndex = cards.indexOf(card);
     }
 
