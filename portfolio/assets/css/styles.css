@@ -97,6 +97,7 @@ body {
   background: var(--body-color);
   color: var(--text-color);
   transition: background-color 0.4s; /* For dark mode*/
+  line-height: 1.6;
 }
 
 h1,
@@ -163,7 +164,7 @@ body.dark-theme {
 	the website, in dark theme
 ==========*/
 .dark-theme .shadow-header {
-  box-shadow: 0 20px 80px -10px var(--secondary-color);
+  /*box-shadow: 0 20px 80px -10px var(--secondary-color);*/
 }
 
 .dark-theme .section__title-1::after,
@@ -421,7 +422,7 @@ body.dark-theme {
 
 /* Add shadow header */
 .shadow-header {
-  box-shadow: 0 20px 80px -10px var(--secondary-color);
+  /*box-shadow: 0 20px 80px -10px var(--secondary-color);*/
 }
 
 /* Active link */
@@ -613,6 +614,7 @@ body.dark-theme {
 
 .button:hover {
   background-color: var(--first-color);
+  cursor: pointer;
 }
 
 .button__ghost {
