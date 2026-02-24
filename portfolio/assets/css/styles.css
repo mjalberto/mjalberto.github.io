@@ -96,7 +96,7 @@ body {
   font-size: var(--normal-font-size);
   background: var(--body-color);
   color: var(--text-color);
-  transition: background-color 0.4s; /* For dark mode*/
+  transition: background-color 0.4s ease-in-out; /* For dark mode*/
   line-height: 1.6;
 }
 
@@ -137,7 +137,7 @@ img {
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   cursor: pointer;
-  transition: color 0.3s;
+  transition: color 0.3s ease-in-out;
 }
 
 /*========== Variables Dark theme ==========*/
@@ -284,8 +284,8 @@ body.dark-theme {
   background-color: var(--body-color);
   z-index: var(--z-fixed);
   transition:
-    box-shadow 0.4s,
-    background-color 0.4s;
+    box-shadow 0.4s ease-in-out,
+    background-color 0.4s ease-in-out;
 }
 
 .nav {
@@ -334,7 +334,7 @@ body.dark-theme {
     padding-block: 1.8rem 5rem;
     text-align: center;
     backdrop-filter: blur(8px);
-    transition: top 0.4s;
+    transition: top 0.4s ease-in-out;
   }
 }
 
