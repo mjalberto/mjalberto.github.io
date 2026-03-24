@@ -1,1144 +1,756 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pro Hitmarker VFX Studio</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 
     <style>
-      body {
-        font-family: "Inter", ui-sans-serif, system-ui, sans-serif;
-      }
+        body { font-family: 'Inter', ui-sans-serif, system-ui, sans-serif; }
+        
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: #18181b; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb { background: #3f3f46; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #52525b; }
 
-      /* Custom Scrollbar */
-      ::-webkit-scrollbar {
-        width: 8px;
-        height: 8px;
-      }
-      ::-webkit-scrollbar-track {
-        background: #18181b;
-        border-radius: 4px;
-      }
-      ::-webkit-scrollbar-thumb {
-        background: #3f3f46;
-        border-radius: 4px;
-      }
-      ::-webkit-scrollbar-thumb:hover {
-        background: #52525b;
-      }
+        .bg-checker {
+            background-image: 
+                linear-gradient(45deg, #1f2229 25%, transparent 25%, transparent 75%, #1f2229 75%, #1f2229),
+                linear-gradient(45deg, #1f2229 25%, transparent 25%, transparent 75%, #1f2229 75%, #1f2229);
+            background-size: 20px 20px;
+            background-position: 0 0, 10px 10px;
+            background-color: #111318;
+        }
 
-      .bg-checker {
-        background-image:
-          linear-gradient(
-            45deg,
-            #1f2229 25%,
-            transparent 25%,
-            transparent 75%,
-            #1f2229 75%,
-            #1f2229
-          ),
-          linear-gradient(
-            45deg,
-            #1f2229 25%,
-            transparent 25%,
-            transparent 75%,
-            #1f2229 75%,
-            #1f2229
-          );
-        background-size: 20px 20px;
-        background-position:
-          0 0,
-          10px 10px;
-        background-color: #111318;
-      }
-
-      /* Range Slider Styling */
-      input[type="range"] {
-        -webkit-appearance: none;
-        width: 100%;
-        background: transparent;
-      }
-      input[type="range"]::-webkit-slider-thumb {
-        -webkit-appearance: none;
-        height: 16px;
-        width: 16px;
-        border-radius: 50%;
-        background: #0ea5e9;
-        cursor: pointer;
-        margin-top: -6px;
-        box-shadow: 0 0 10px rgba(14, 165, 233, 0.5);
-        transition: transform 0.1s;
-      }
-      input[type="range"]::-webkit-slider-thumb:hover {
-        transform: scale(1.2);
-      }
-      input[type="range"]::-webkit-slider-runnable-track {
-        width: 100%;
-        height: 4px;
-        cursor: pointer;
-        background: #3f3f46;
-        border-radius: 2px;
-      }
-
-      /* Hide Number Input Arrows */
-      input[type="number"]::-webkit-inner-spin-button,
-      input[type="number"]::-webkit-outer-spin-button {
-        -webkit-appearance: none;
-        margin: 0;
-      }
+        input[type=range] { -webkit-appearance: none; width: 100%; background: transparent; }
+        input[type=range]::-webkit-slider-thumb {
+            -webkit-appearance: none; height: 16px; width: 16px; border-radius: 50%;
+            background: #0ea5e9; cursor: pointer; margin-top: -6px;
+            box-shadow: 0 0 10px rgba(14, 165, 233, 0.5); transition: transform 0.1s;
+        }
+        input[type=range]::-webkit-slider-thumb:hover { transform: scale(1.2); }
+        input[type=range]::-webkit-slider-runnable-track {
+            width: 100%; height: 4px; cursor: pointer; background: #3f3f46; border-radius: 2px;
+        }
+        
+        input[type=number]::-webkit-inner-spin-button, 
+        input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
     </style>
-  </head>
-  <body
-    class="bg-zinc-950 text-zinc-100 min-h-screen p-4 md:p-6 selection:bg-sky-500 selection:text-white"
-  >
+</head>
+<body class="bg-zinc-950 text-zinc-100 min-h-screen p-4 md:p-6 selection:bg-sky-500 selection:text-white">
+
     <div class="max-w-[1600px] mx-auto">
-      <header
-        class="mb-6 border-b border-zinc-800 pb-4 flex flex-col lg:flex-row lg:justify-between lg:items-end gap-4"
-      >
-        <div>
-          <h1
-            class="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-sky-400 via-blue-500 to-emerald-400"
-          >
-            Pro Hitmarker VFX Studio
-          </h1>
-          <p class="text-zinc-400 text-sm mt-1">
-            Design, Preview, and Export 60FPS Image Sequences
-          </p>
-        </div>
-
-        <div class="flex flex-wrap items-end gap-3">
-          <div
-            class="bg-zinc-900 p-2 rounded-xl border border-zinc-800 flex gap-4 items-center px-4"
-          >
+        <header class="mb-6 border-b border-zinc-800 pb-4 flex flex-col lg:flex-row lg:justify-between lg:items-end gap-4">
             <div>
-              <label
-                class="text-[10px] uppercase text-zinc-500 font-bold block mb-1"
-                >Export Size</label
-              >
-              <div class="flex items-center gap-2">
-                <input
-                  type="number"
-                  id="exportW"
-                  value="512"
-                  class="w-16 bg-zinc-950 border border-zinc-700 rounded px-2 py-1 text-xs focus:border-sky-500 outline-none text-center"
-                />
-                <span class="text-zinc-600 text-xs">x</span>
-                <input
-                  type="number"
-                  id="exportH"
-                  value="512"
-                  class="w-16 bg-zinc-950 border border-zinc-700 rounded px-2 py-1 text-xs focus:border-sky-500 outline-none text-center"
-                />
-              </div>
+                <h1 class="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-sky-400 via-blue-500 to-emerald-400">
+                    Pro Hitmarker VFX Studio
+                </h1>
+                <p class="text-zinc-400 text-sm mt-1">Design, Preview, and Export 60FPS Image Sequences</p>
             </div>
-          </div>
+            
+            <div class="flex flex-wrap items-end gap-3">
+                <div class="bg-zinc-900 p-2 rounded-xl border border-zinc-800 flex gap-4 items-center px-4">
+                    <div>
+                        <label class="text-[10px] uppercase text-zinc-500 font-bold block mb-1">Export Size</label>
+                        <div class="flex items-center gap-2">
+                            <input type="number" id="exportW" value="512" class="w-16 bg-zinc-950 border border-zinc-700 rounded px-2 py-1 text-xs focus:border-sky-500 outline-none text-center">
+                            <span class="text-zinc-600 text-xs">x</span>
+                            <input type="number" id="exportH" value="512" class="w-16 bg-zinc-950 border border-zinc-700 rounded px-2 py-1 text-xs focus:border-sky-500 outline-none text-center">
+                        </div>
+                    </div>
+                </div>
 
-          <button
-            id="exportBtn"
-            onclick="exportSequence()"
-            class="bg-gradient-to-r from-sky-600 to-blue-600 hover:from-sky-500 hover:to-blue-500 text-white font-semibold py-2 px-6 rounded-xl transition-all shadow-[0_0_20px_rgba(14,165,233,0.2)] hover:shadow-[0_0_30px_rgba(14,165,233,0.4)] flex items-center gap-2 h-[54px]"
-          >
-            <svg
-              class="w-5 h-5"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"
-              ></path>
-            </svg>
-            <span>Export Sequence (.ZIP)</span>
-          </button>
+                <button id="exportBtn" onclick="exportSequence()" class="bg-gradient-to-r from-sky-600 to-blue-600 hover:from-sky-500 hover:to-blue-500 text-white font-semibold py-2 px-6 rounded-xl transition-all shadow-[0_0_20px_rgba(14,165,233,0.2)] hover:shadow-[0_0_30px_rgba(14,165,233,0.4)] flex items-center gap-2 h-[54px]">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path></svg>
+                    <span>Export Sequence (.ZIP)</span>
+                </button>
+            </div>
+        </header>
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 h-[calc(100vh-140px)]">
+            
+            <div class="lg:col-span-8 flex flex-col gap-4 h-full">
+                
+                <div class="bg-zinc-900 border border-zinc-800 rounded-xl p-1 flex flex-col relative group flex-grow">
+                    <div class="absolute top-4 left-4 right-4 flex justify-between items-start z-10 pointer-events-none">
+                        <div class="flex items-center gap-2 pointer-events-auto">
+                            <div class="flex gap-1 text-xs bg-zinc-950/90 backdrop-blur p-1 rounded-lg border border-zinc-700/50 shadow-lg">
+                                <button id="bgTransparent" class="px-3 py-1.5 rounded bg-zinc-700 text-white shadow-sm transition">Grid</button>
+                                <button id="bgGreen" class="px-3 py-1.5 rounded text-zinc-400 hover:text-white hover:bg-zinc-800 transition">Green</button>
+                                <button id="bgImage" class="px-3 py-1.5 rounded text-zinc-400 hover:text-white hover:bg-zinc-800 transition flex gap-1 items-center">
+                                    <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                                    Upload BG
+                                </button>
+                                <input type="file" id="fileInput" accept="image/*" class="hidden">
+                            </div>
+                        </div>
+                        <button onclick="toggleFullscreen()" class="pointer-events-auto p-2 bg-zinc-950/90 backdrop-blur border border-zinc-700/50 rounded-lg text-zinc-400 hover:text-white hover:border-sky-500 transition shadow-lg" title="Fullscreen Preview">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"></path>
+                            </svg>
+                        </button>
+                    </div>
+
+                    <div id="canvasContainer" class="relative w-full h-full rounded-lg overflow-hidden border border-zinc-800 bg-checker flex items-center justify-center shadow-inner">
+                        <canvas id="previewCanvas" class="w-full h-full object-contain"></canvas>
+                        
+                        <div class="absolute inset-0 pointer-events-none flex items-center justify-center opacity-10">
+                            <div class="w-px h-full bg-red-500 absolute"></div>
+                            <div class="h-px w-full bg-red-500 absolute"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-zinc-900 border border-zinc-800 rounded-xl p-4 shrink-0 flex flex-col md:flex-row items-start md:items-center gap-4">
+                    <div class="flex items-center gap-3">
+                        <span class="text-xs font-bold text-zinc-500 uppercase tracking-wider whitespace-nowrap">Template:</span>
+                        <select id="presetGame" class="bg-zinc-950 border border-zinc-700 rounded p-1.5 text-xs text-zinc-200 outline-none focus:border-sky-500 w-36">
+                            <option value="mw">Modern Warfare</option>
+                            <option value="apex">Apex Legends</option>
+                            <option value="ow">Overwatch</option>
+                        </select>
+                    </div>
+                    <div class="h-px w-full md:w-px md:h-6 bg-zinc-700"></div>
+                    <div class="flex items-center gap-2 overflow-x-auto pb-1 md:pb-0 w-full custom-scrollbar">
+                        <button onclick="applyPreset('body')" class="px-4 py-1.5 bg-zinc-800 hover:bg-zinc-700 border border-zinc-700 rounded text-xs transition whitespace-nowrap">Body Hit</button>
+                        <button onclick="applyPreset('head')" class="px-4 py-1.5 bg-zinc-800 hover:bg-yellow-900/30 border border-zinc-700 hover:border-yellow-600 rounded text-xs transition text-yellow-500 whitespace-nowrap">Head Hit</button>
+                        <button onclick="applyPreset('body_kill')" class="px-4 py-1.5 bg-zinc-800 hover:bg-red-900/30 border border-zinc-700 hover:border-red-600 rounded text-xs transition text-red-400 whitespace-nowrap">Body Kill</button>
+                        <button onclick="applyPreset('head_kill')" class="px-4 py-1.5 bg-zinc-800 hover:bg-red-900/30 border border-zinc-700 hover:border-red-600 rounded text-xs transition text-red-500 font-bold whitespace-nowrap shadow-[0_0_10px_rgba(239,68,68,0.1)]">Head Kill</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="lg:col-span-4 bg-zinc-900 border border-zinc-800 rounded-xl flex flex-col h-full overflow-hidden">
+                <div class="p-4 border-b border-zinc-800 bg-zinc-900/50">
+                    <h2 class="font-semibold text-sm uppercase tracking-wider text-zinc-400">Properties</h2>
+                </div>
+                
+                <div class="p-5 overflow-y-auto custom-scrollbar flex-grow space-y-6">
+                    
+                    <div class="space-y-4">
+                        <h3 class="text-xs font-bold text-sky-500 uppercase">Visual Style</h3>
+                        <div class="grid grid-cols-2 gap-3">
+                            <div class="col-span-2">
+                                <label class="text-xs text-zinc-400 block mb-1">Hit Type Pattern</label>
+                                <select id="style" class="w-full bg-zinc-950 border border-zinc-700 rounded p-2 text-xs focus:border-sky-500 outline-none">
+                                    <option value="standard">Standard (Single Arm)</option>
+                                    <option value="parallel">Double (Parallel Arms)</option>
+                                    <option value="inner">Double (Inner Cross)</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="text-xs text-zinc-400 block mb-1">Shape</label>
+                                <select id="shape" class="w-full bg-zinc-950 border border-zinc-700 rounded p-2 text-xs focus:border-sky-500 outline-none">
+                                    <option value="line">Flat Line</option>
+                                    <option value="tapered">Pointy / Sharp</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="text-xs text-zinc-400 block mb-1">Line Cap Style</label>
+                                <select id="cap" class="w-full bg-zinc-950 border border-zinc-700 rounded p-2 text-xs focus:border-sky-500 outline-none">
+                                    <option value="butt">Flat Cut</option>
+                                    <option value="round">Rounded Ends</option>
+                                    <option value="square">Boxy (Extends Line)</option>
+                                </select>
+                            </div>
+                            <div class="col-span-2">
+                                <label class="text-xs text-zinc-400 block mb-1">Primary Color</label>
+                                <div class="flex gap-2">
+                                    <input type="color" id="color" value="#ffffff" class="h-8 w-12 rounded bg-zinc-950 border border-zinc-700 p-0.5 cursor-pointer">
+                                    <input type="text" id="colorHex" value="#ffffff" class="flex-grow bg-zinc-950 border border-zinc-700 rounded px-2 text-xs uppercase font-mono">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="h-px bg-zinc-800 w-full"></div>
+
+                    <div class="space-y-4">
+                        <h3 class="text-xs font-bold text-sky-500 uppercase">Geometry & FX</h3>
+                        
+                        <div>
+                            <div class="flex justify-between text-xs mb-1 text-zinc-400"><label>Line Thickness</label><span id="valThickness" class="font-mono text-zinc-200">4px</span></div>
+                            <input type="range" id="thickness" min="1" max="40" value="4">
+                        </div>
+                        <div>
+                            <div class="flex justify-between text-xs mb-1 text-zinc-400"><label>Line Length</label><span id="valLength" class="font-mono text-zinc-200">25px</span></div>
+                            <input type="range" id="length" min="5" max="150" value="25">
+                        </div>
+                        <div>
+                            <div class="flex justify-between text-xs mb-1 text-zinc-400"><label>Center Gap</label><span id="valGap" class="font-mono text-zinc-200">15px</span></div>
+                            <input type="range" id="gap" min="0" max="100" value="15">
+                        </div>
+                        <div>
+                            <div class="flex justify-between text-xs mb-1 text-zinc-400"><label>Cross Angle (Rotation)</label><span id="valRotation" class="font-mono text-zinc-200">45°</span></div>
+                            <input type="range" id="rotation" min="0" max="90" value="45">
+                        </div>
+                        <div>
+                            <div class="flex justify-between text-xs mb-1 text-zinc-400"><label>Glow Intensity</label><span id="valGlow" class="font-mono text-zinc-200">0px</span></div>
+                            <input type="range" id="glow" min="0" max="50" value="0">
+                        </div>
+
+                        <div id="parallelControls" class="hidden p-3 bg-zinc-950/50 rounded-lg border border-zinc-800 space-y-3">
+                            <label class="text-xs font-bold text-zinc-500 block">Parallel Settings</label>
+                            <div>
+                                <div class="flex justify-between text-xs mb-1 text-zinc-400"><label>Distance Between</label><span id="valParallelOffset" class="font-mono text-zinc-200">6px</span></div>
+                                <input type="range" id="parallelOffset" min="2" max="40" step="1" value="6">
+                            </div>
+                        </div>
+
+                        <div id="innerControls" class="hidden p-3 bg-zinc-950/50 rounded-lg border border-zinc-800 space-y-3">
+                            <label class="text-xs font-bold text-zinc-500 block">Inner Cross Settings</label>
+                            <div>
+                                <div class="flex justify-between text-xs mb-1 text-zinc-400"><label>Scale Multiplier</label><span id="valInnerScale" class="font-mono text-zinc-200">0.6x</span></div>
+                                <input type="range" id="innerScale" min="0.1" max="1.5" step="0.1" value="0.6">
+                            </div>
+                            <div>
+                                <div class="flex justify-between text-xs mb-1 text-zinc-400"><label>Gap Offset</label><span id="valInnerOffset" class="font-mono text-zinc-200">-5px</span></div>
+                                <input type="range" id="innerOffset" min="-50" max="50" value="-5">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="h-px bg-zinc-800 w-full"></div>
+
+                    <div class="space-y-4">
+                        <h3 class="text-xs font-bold text-sky-500 uppercase">Animation Physics</h3>
+                        
+                        <div class="grid grid-cols-2 gap-3">
+                            <div>
+                                <label class="text-xs text-zinc-400 block mb-1">Direction</label>
+                                <select id="direction" class="w-full bg-zinc-950 border border-zinc-700 rounded p-2 text-xs outline-none">
+                                    <option value="outward">Pop Outward</option>
+                                    <option value="inward">Snap Inward</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="text-xs text-zinc-400 block mb-1">Travel Easing</label>
+                                <select id="easing" class="w-full bg-zinc-950 border border-zinc-700 rounded p-2 text-xs outline-none">
+                                    <option value="linear">Linear</option>
+                                    <option value="easeOutCubic" selected>Ease Out (Standard)</option>
+                                    <option value="easeOutExpo">Snappy (Fast Start)</option>
+                                    <option value="easeOutBack">Elastic (Bouncy)</option>
+                                    <option value="mwPop">MW Heavy Pop (Overshoot)</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <canvas id="travelGraph" class="w-full h-12 bg-[#111318] rounded border border-zinc-800"></canvas>
+
+                        <div>
+                            <div class="flex justify-between text-xs mb-1 text-zinc-400"><label>Travel Distance</label><span id="valTravel" class="font-mono text-zinc-200">20px</span></div>
+                            <input type="range" id="travel" min="0" max="200" value="20">
+                        </div>
+                        <div>
+                            <div class="flex justify-between text-xs mb-1 text-zinc-400"><label>Duration (Speed)</label><span id="valDuration" class="font-mono text-zinc-200">250ms</span></div>
+                            <input type="range" id="duration" min="50" max="1500" step="10" value="250">
+                        </div>
+                        
+                        <div class="p-3 bg-zinc-950/50 rounded-lg border border-zinc-800 space-y-3">
+                            <div class="flex items-center justify-between">
+                                <label class="text-xs font-bold text-zinc-500">Enable Fade Out</label>
+                                <input type="checkbox" id="fadeToggle" checked class="w-4 h-4 rounded border-zinc-700 bg-zinc-900 text-sky-500 focus:ring-sky-500">
+                            </div>
+                            <div id="fadeEasingContainer" class="space-y-2">
+                                <div>
+                                    <label class="text-xs text-zinc-400 block mb-1">Fade Curve</label>
+                                    <select id="fadeEasing" class="w-full bg-zinc-950 border border-zinc-700 rounded p-2 text-xs outline-none">
+                                        <option value="linear">Linear (Smooth)</option>
+                                        <option value="easeIn">Ease In (Late Fade)</option>
+                                        <option value="easeOut">Ease Out (Early Fade)</option>
+                                        <option value="lateFade">Hold then Fade</option>
+                                        <option value="sharpCut">Sharp Cut (Steps)</option>
+                                    </select>
+                                </div>
+                                <canvas id="fadeGraph" class="w-full h-10 bg-[#111318] rounded border border-zinc-800"></canvas>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
         </div>
-      </header>
-
-      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 h-[calc(100vh-140px)]">
-        <div class="lg:col-span-8 flex flex-col gap-4 h-full">
-          <div
-            class="bg-zinc-900 border border-zinc-800 rounded-xl p-1 flex flex-col relative group flex-grow"
-          >
-            <div
-              class="absolute top-4 left-4 right-4 flex justify-between items-start z-10 pointer-events-none"
-            >
-              <div class="flex items-center gap-2 pointer-events-auto">
-                <div
-                  class="flex gap-1 text-xs bg-zinc-950/90 backdrop-blur p-1 rounded-lg border border-zinc-700/50 shadow-lg"
-                >
-                  <button
-                    id="bgTransparent"
-                    class="px-3 py-1.5 rounded bg-zinc-700 text-white shadow-sm transition"
-                  >
-                    Grid
-                  </button>
-                  <button
-                    id="bgGreen"
-                    class="px-3 py-1.5 rounded text-zinc-400 hover:text-white hover:bg-zinc-800 transition"
-                  >
-                    Green
-                  </button>
-                  <button
-                    id="bgImage"
-                    class="px-3 py-1.5 rounded text-zinc-400 hover:text-white hover:bg-zinc-800 transition flex gap-1 items-center"
-                  >
-                    <svg
-                      class="w-3 h-3"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="2"
-                        d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
-                      ></path>
-                    </svg>
-                    Upload BG
-                  </button>
-                  <input
-                    type="file"
-                    id="fileInput"
-                    accept="image/*"
-                    class="hidden"
-                  />
-                </div>
-              </div>
-              <button
-                onclick="toggleFullscreen()"
-                class="pointer-events-auto p-2 bg-zinc-950/90 backdrop-blur border border-zinc-700/50 rounded-lg text-zinc-400 hover:text-white hover:border-sky-500 transition shadow-lg"
-                title="Fullscreen Preview"
-              >
-                <svg
-                  class="w-5 h-5"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"
-                  ></path>
-                </svg>
-              </button>
-            </div>
-
-            <div
-              id="canvasContainer"
-              class="relative w-full h-full rounded-lg overflow-hidden border border-zinc-800 bg-checker flex items-center justify-center shadow-inner"
-            >
-              <canvas
-                id="previewCanvas"
-                class="w-full h-full object-contain"
-              ></canvas>
-
-              <div
-                class="absolute inset-0 pointer-events-none flex items-center justify-center opacity-10"
-              >
-                <div class="w-px h-full bg-red-500 absolute"></div>
-                <div class="h-px w-full bg-red-500 absolute"></div>
-              </div>
-            </div>
-          </div>
-
-          <div
-            class="bg-zinc-900 border border-zinc-800 rounded-xl p-4 shrink-0 flex flex-col md:flex-row items-start md:items-center gap-4"
-          >
-            <div class="flex items-center gap-3">
-              <span
-                class="text-xs font-bold text-zinc-500 uppercase tracking-wider whitespace-nowrap"
-                >Template:</span
-              >
-              <select
-                id="presetGame"
-                class="bg-zinc-950 border border-zinc-700 rounded p-1.5 text-xs text-zinc-200 outline-none focus:border-sky-500 w-36"
-              >
-                <option value="mw">Modern Warfare</option>
-                <option value="apex">Apex Legends</option>
-                <option value="ow">Overwatch</option>
-              </select>
-            </div>
-            <div class="h-px w-full md:w-px md:h-6 bg-zinc-700"></div>
-            <div
-              class="flex items-center gap-2 overflow-x-auto pb-1 md:pb-0 w-full custom-scrollbar"
-            >
-              <button
-                onclick="applyPreset('body')"
-                class="px-4 py-1.5 bg-zinc-800 hover:bg-zinc-700 border border-zinc-700 rounded text-xs transition whitespace-nowrap"
-              >
-                Body Hit
-              </button>
-              <button
-                onclick="applyPreset('head')"
-                class="px-4 py-1.5 bg-zinc-800 hover:bg-yellow-900/30 border border-zinc-700 hover:border-yellow-600 rounded text-xs transition text-yellow-500 whitespace-nowrap"
-              >
-                Head Hit
-              </button>
-              <button
-                onclick="applyPreset('body_kill')"
-                class="px-4 py-1.5 bg-zinc-800 hover:bg-red-900/30 border border-zinc-700 hover:border-red-600 rounded text-xs transition text-red-400 whitespace-nowrap"
-              >
-                Body Kill
-              </button>
-              <button
-                onclick="applyPreset('head_kill')"
-                class="px-4 py-1.5 bg-zinc-800 hover:bg-red-900/30 border border-zinc-700 hover:border-red-600 rounded text-xs transition text-red-500 font-bold whitespace-nowrap shadow-[0_0_10px_rgba(239,68,68,0.1)]"
-              >
-                Head Kill
-              </button>
-            </div>
-          </div>
-        </div>
-
-        <div
-          class="lg:col-span-4 bg-zinc-900 border border-zinc-800 rounded-xl flex flex-col h-full overflow-hidden"
-        >
-          <div class="p-4 border-b border-zinc-800 bg-zinc-900/50">
-            <h2
-              class="font-semibold text-sm uppercase tracking-wider text-zinc-400"
-            >
-              Properties
-            </h2>
-          </div>
-
-          <div class="p-5 overflow-y-auto custom-scrollbar flex-grow space-y-6">
-            <div class="space-y-4">
-              <h3 class="text-xs font-bold text-sky-500 uppercase">
-                Visual Style
-              </h3>
-              <div class="grid grid-cols-2 gap-3">
-                <div class="col-span-2">
-                  <label class="text-xs text-zinc-400 block mb-1"
-                    >Hit Type</label
-                  >
-                  <select
-                    id="style"
-                    class="w-full bg-zinc-950 border border-zinc-700 rounded p-2 text-xs focus:border-sky-500 outline-none"
-                  >
-                    <option value="standard">Standard (Single Arm)</option>
-                    <option value="double">Double (Parallel Arms)</option>
-                  </select>
-                </div>
-                <div>
-                  <label class="text-xs text-zinc-400 block mb-1">Shape</label>
-                  <select
-                    id="shape"
-                    class="w-full bg-zinc-950 border border-zinc-700 rounded p-2 text-xs focus:border-sky-500 outline-none"
-                  >
-                    <option value="line">Flat Line</option>
-                    <option value="tapered">Pointy / Sharp</option>
-                  </select>
-                </div>
-                <div>
-                  <label class="text-xs text-zinc-400 block mb-1"
-                    >Cap Style</label
-                  >
-                  <select
-                    id="cap"
-                    class="w-full bg-zinc-950 border border-zinc-700 rounded p-2 text-xs focus:border-sky-500 outline-none"
-                  >
-                    <option value="butt">Flat Cut</option>
-                    <option value="round">Rounded</option>
-                    <option value="square">Extended</option>
-                  </select>
-                </div>
-                <div class="col-span-2">
-                  <label class="text-xs text-zinc-400 block mb-1"
-                    >Primary Color</label
-                  >
-                  <div class="flex gap-2">
-                    <input
-                      type="color"
-                      id="color"
-                      value="#ffffff"
-                      class="h-8 w-12 rounded bg-zinc-950 border border-zinc-700 p-0.5 cursor-pointer"
-                    />
-                    <input
-                      type="text"
-                      id="colorHex"
-                      value="#ffffff"
-                      class="flex-grow bg-zinc-950 border border-zinc-700 rounded px-2 text-xs uppercase font-mono"
-                    />
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div class="h-px bg-zinc-800 w-full"></div>
-
-            <div class="space-y-4">
-              <h3 class="text-xs font-bold text-sky-500 uppercase">Geometry</h3>
-
-              <div>
-                <div class="flex justify-between text-xs mb-1 text-zinc-400">
-                  <label>Line Thickness</label
-                  ><span id="valThickness" class="font-mono text-zinc-200"
-                    >4px</span
-                  >
-                </div>
-                <input type="range" id="thickness" min="1" max="40" value="4" />
-              </div>
-              <div>
-                <div class="flex justify-between text-xs mb-1 text-zinc-400">
-                  <label>Line Length</label
-                  ><span id="valLength" class="font-mono text-zinc-200"
-                    >25px</span
-                  >
-                </div>
-                <input type="range" id="length" min="5" max="150" value="25" />
-              </div>
-              <div>
-                <div class="flex justify-between text-xs mb-1 text-zinc-400">
-                  <label>Center Gap</label
-                  ><span id="valGap" class="font-mono text-zinc-200">15px</span>
-                </div>
-                <input type="range" id="gap" min="0" max="100" value="15" />
-              </div>
-              <div
-                id="doubleControls"
-                class="hidden p-3 bg-zinc-950/50 rounded-lg border border-zinc-800 space-y-3"
-              >
-                <label class="text-xs font-bold text-zinc-500 block"
-                  >Double Cross Settings</label
-                >
-                <div>
-                  <div class="flex justify-between text-xs mb-1 text-zinc-400">
-                    <label>Parallel Offset</label
-                    ><span id="valOffset" class="font-mono text-zinc-200"
-                      >6px</span
-                    >
-                  </div>
-                  <input
-                    type="range"
-                    id="offset"
-                    min="2"
-                    max="40"
-                    step="1"
-                    value="6"
-                  />
-                </div>
-              </div>
-            </div>
-
-            <div class="h-px bg-zinc-800 w-full"></div>
-
-            <div class="space-y-4">
-              <h3 class="text-xs font-bold text-sky-500 uppercase">
-                Animation Physics
-              </h3>
-
-              <div class="grid grid-cols-2 gap-3">
-                <div>
-                  <label class="text-xs text-zinc-400 block mb-1"
-                    >Direction</label
-                  >
-                  <select
-                    id="direction"
-                    class="w-full bg-zinc-950 border border-zinc-700 rounded p-2 text-xs outline-none"
-                  >
-                    <option value="outward">Pop Outward</option>
-                    <option value="inward">Snap Inward</option>
-                  </select>
-                </div>
-                <div>
-                  <label class="text-xs text-zinc-400 block mb-1"
-                    >Travel Easing</label
-                  >
-                  <select
-                    id="easing"
-                    class="w-full bg-zinc-950 border border-zinc-700 rounded p-2 text-xs outline-none"
-                  >
-                    <option value="linear">Linear</option>
-                    <option value="easeOutQuad">Ease Out (Soft)</option>
-                    <option value="easeOutCubic" selected>
-                      Ease Out (Standard)
-                    </option>
-                    <option value="easeOutBack">Elastic Pop</option>
-                  </select>
-                </div>
-              </div>
-
-              <div>
-                <div class="flex justify-between text-xs mb-1 text-zinc-400">
-                  <label>Travel Distance</label
-                  ><span id="valTravel" class="font-mono text-zinc-200"
-                    >20px</span
-                  >
-                </div>
-                <input type="range" id="travel" min="0" max="200" value="20" />
-              </div>
-              <div>
-                <div class="flex justify-between text-xs mb-1 text-zinc-400">
-                  <label>Duration (Speed)</label
-                  ><span id="valDuration" class="font-mono text-zinc-200"
-                    >250ms</span
-                  >
-                </div>
-                <input
-                  type="range"
-                  id="duration"
-                  min="50"
-                  max="1500"
-                  step="10"
-                  value="250"
-                />
-              </div>
-
-              <div
-                class="p-3 bg-zinc-950/50 rounded-lg border border-zinc-800 space-y-3"
-              >
-                <div class="flex items-center justify-between">
-                  <label class="text-xs font-bold text-zinc-500"
-                    >Enable Fade Out</label
-                  >
-                  <input
-                    type="checkbox"
-                    id="fadeToggle"
-                    checked
-                    class="w-4 h-4 rounded border-zinc-700 bg-zinc-900 text-sky-500 focus:ring-sky-500"
-                  />
-                </div>
-                <div id="fadeEasingContainer">
-                  <label class="text-xs text-zinc-400 block mb-1"
-                    >Fade Curve</label
-                  >
-                  <select
-                    id="fadeEasing"
-                    class="w-full bg-zinc-950 border border-zinc-700 rounded p-2 text-xs outline-none"
-                  >
-                    <option value="linear">Linear (Smooth)</option>
-                    <option value="easeIn">Ease In (Late Fade)</option>
-                    <option value="easeOut">Ease Out (Early Fade)</option>
-                    <option value="lateFade">Hold then Fade</option>
-                  </select>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
     </div>
 
     <script>
-      // --- Configuration & State ---
-      const config = {
-        style: "standard", // 'standard', 'double'
-        shape: "line", // 'line', 'tapered'
-        cap: "butt",
-        color: "#ffffff",
-        thickness: 4,
-        length: 25,
-        gap: 15,
-        offset: 6, // Parallel distance between double lines
-        direction: "outward",
-        easing: "easeOutCubic",
-        travel: 20,
-        duration: 250,
-        fade: true,
-        fadeEasing: "linear",
-        background: "transparent",
-        bgImage: null,
-      };
+        // --- Easing Math ---
+        const easings = {
+            linear: (t) => t,
+            easeOutCubic: (t) => 1 - Math.pow(1 - t, 3),
+            easeOutExpo: (t) => t === 1 ? 1 : 1 - Math.pow(2, -10 * t),
+            easeOutBack: (t) => {
+                const c1 = 1.70158;
+                const c3 = c1 + 1;
+                return 1 + c3 * Math.pow(t - 1, 3) + c1 * Math.pow(t - 1, 2);
+            },
+            mwPop: (t) => {
+                const c1 = 3.5; // Aggressive overshoot
+                const c3 = c1 + 1;
+                return 1 + c3 * Math.pow(t - 1, 3) + c1 * Math.pow(t - 1, 2);
+            }
+        };
 
-      const gamePresets = {
-        mw: {
-          body: {
-            style: "standard",
-            shape: "line",
-            cap: "butt",
-            color: "#ffffff",
-            thickness: 3,
-            length: 22,
-            gap: 12,
-            offset: 6,
-            direction: "outward",
-            easing: "easeOutCubic",
-            travel: 8,
-            duration: 150,
-            fade: true,
-            fadeEasing: "linear",
-          },
-          head: {
-            style: "double",
-            shape: "line",
-            cap: "butt",
-            color: "#ffb300",
-            thickness: 3,
+        const fadeEasings = {
+            linear: (t) => t,
+            easeIn: (t) => t * t, // Fades slow at first, then rapid
+            easeOut: (t) => 1 - (1 - t) * (1 - t), // Fades fast at first, then slow
+            lateFade: (t) => t < 0.5 ? 0 : (t - 0.5) * 2, // Solid for first half
+            sharpCut: (t) => Math.floor(t * 4) / 4 // Stepped frame-by-frame feel
+        };
+
+        // --- Configuration & State ---
+        const config = {
+            style: 'standard', // 'standard', 'parallel', 'inner'
+            shape: 'line',     
+            cap: 'butt',
+            color: '#ffffff',
+            thickness: 4,
             length: 25,
-            gap: 14,
-            offset: 7,
-            direction: "outward",
-            easing: "easeOutBack",
-            travel: 12,
-            duration: 250,
-            fade: true,
-            fadeEasing: "linear",
-          },
-          body_kill: {
-            style: "standard",
-            shape: "line",
-            cap: "round",
-            color: "#ff1100",
-            thickness: 5,
-            length: 30,
-            gap: 10,
-            offset: 6,
-            direction: "outward",
-            easing: "easeOutQuad",
+            gap: 15,
+            rotation: 45,
+            glow: 0,
+            parallelOffset: 6,
+            innerScale: 0.6,
+            innerOffset: -5,
+            direction: 'outward',
+            easing: 'mwPop',
             travel: 20,
-            duration: 350,
-            fade: true,
-            fadeEasing: "lateFade",
-          },
-          head_kill: {
-            style: "double",
-            shape: "line",
-            cap: "butt",
-            color: "#ff1100",
-            thickness: 4,
-            length: 35,
-            gap: 12,
-            offset: 9,
-            direction: "outward",
-            easing: "easeOutBack",
-            travel: 25,
-            duration: 400,
-            fade: true,
-            fadeEasing: "lateFade",
-          },
-        },
-        apex: {
-          body: {
-            style: "standard",
-            shape: "tapered",
-            cap: "butt",
-            color: "#ffffff",
-            thickness: 8,
-            length: 15,
-            gap: 10,
-            offset: 6,
-            direction: "outward",
-            easing: "easeOutCubic",
-            travel: 15,
-            duration: 200,
-            fade: true,
-            fadeEasing: "linear",
-          },
-          head: {
-            style: "double",
-            shape: "tapered",
-            cap: "butt",
-            color: "#a855f7",
-            thickness: 6,
-            length: 20,
-            gap: 12,
-            offset: 12,
-            direction: "inward",
-            easing: "easeOutBack",
-            travel: 30,
-            duration: 300,
-            fade: true,
-            fadeEasing: "easeIn",
-          },
-          body_kill: {
-            style: "standard",
-            shape: "tapered",
-            cap: "butt",
-            color: "#ef4444",
-            thickness: 12,
-            length: 25,
-            gap: 15,
-            offset: 6,
-            direction: "outward",
-            easing: "easeOutQuad",
-            travel: 40,
-            duration: 400,
-            fade: true,
-            fadeEasing: "lateFade",
-          },
-          head_kill: {
-            style: "double",
-            shape: "tapered",
-            cap: "butt",
-            color: "#ef4444",
-            thickness: 10,
-            length: 30,
-            gap: 15,
-            offset: 16,
-            direction: "inward",
-            easing: "easeOutBack",
-            travel: 50,
-            duration: 450,
-            fade: true,
-            fadeEasing: "lateFade",
-          },
-        },
-        ow: {
-          body: {
-            style: "standard",
-            shape: "line",
-            cap: "round",
-            color: "#ffffff",
-            thickness: 4,
-            length: 18,
-            gap: 18,
-            offset: 6,
-            direction: "outward",
-            easing: "linear",
-            travel: 5,
-            duration: 150,
-            fade: true,
-            fadeEasing: "easeOut",
-          },
-          head: {
-            style: "double",
-            shape: "line",
-            cap: "round",
-            color: "#ef4444",
-            thickness: 4,
-            length: 22,
-            gap: 20,
-            offset: 8,
-            direction: "outward",
-            easing: "easeOutCubic",
-            travel: 10,
             duration: 250,
             fade: true,
-            fadeEasing: "easeOut",
-          },
-          body_kill: {
-            style: "standard",
-            shape: "line",
-            cap: "square",
-            color: "#ef4444",
-            thickness: 6,
-            length: 30,
-            gap: 10,
-            offset: 6,
-            direction: "outward",
-            easing: "easeOutBack",
-            travel: 25,
-            duration: 300,
-            fade: true,
-            fadeEasing: "lateFade",
-          },
-          head_kill: {
-            style: "double",
-            shape: "line",
-            cap: "square",
-            color: "#ef4444",
-            thickness: 6,
-            length: 35,
-            gap: 12,
-            offset: 10,
-            direction: "outward",
-            easing: "easeOutBack",
-            travel: 35,
-            duration: 400,
-            fade: true,
-            fadeEasing: "lateFade",
-          },
-        },
-      };
+            fadeEasing: 'linear',
+            background: 'transparent',
+            bgImage: null 
+        };
 
-      // --- DOM Elements ---
-      const canvas = document.getElementById("previewCanvas");
-      const ctx = canvas.getContext("2d");
-      const exportBtn = document.getElementById("exportBtn");
-      const fileInput = document.getElementById("fileInput");
+        const gamePresets = {
+            'mw': {
+                'body': { style: 'standard', shape: 'line', cap: 'butt', color: '#ffffff', thickness: 3, length: 22, gap: 12, rotation: 45, glow: 2, parallelOffset: 6, innerScale: 0.6, innerOffset: -5, direction: 'outward', easing: 'easeOutCubic', travel: 8, duration: 150, fade: true, fadeEasing: 'linear' },
+                'head': { style: 'inner', shape: 'line', cap: 'butt', color: '#ffb300', thickness: 3, length: 25, gap: 14, rotation: 45, glow: 4, parallelOffset: 7, innerScale: 0.6, innerOffset: 2, direction: 'outward', easing: 'mwPop', travel: 12, duration: 250, fade: true, fadeEasing: 'linear' },
+                'body_kill': { style: 'standard', shape: 'line', cap: 'round', color: '#ff1100', thickness: 5, length: 30, gap: 10, rotation: 45, glow: 6, parallelOffset: 6, innerScale: 0.6, innerOffset: -5, direction: 'outward', easing: 'mwPop', travel: 25, duration: 350, fade: true, fadeEasing: 'lateFade' },
+                'head_kill': { style: 'inner', shape: 'line', cap: 'butt', color: '#ff1100', thickness: 4, length: 35, gap: 12, rotation: 45, glow: 8, parallelOffset: 9, innerScale: 0.5, innerOffset: 5, direction: 'outward', easing: 'mwPop', travel: 35, duration: 450, fade: true, fadeEasing: 'lateFade' }
+            },
+            'apex': {
+                'body': { style: 'standard', shape: 'tapered', cap: 'butt', color: '#ffffff', thickness: 8, length: 15, gap: 10, rotation: 45, glow: 0, parallelOffset: 6, innerScale: 0.6, innerOffset: -5, direction: 'outward', easing: 'easeOutExpo', travel: 15, duration: 200, fade: true, fadeEasing: 'linear' },
+                'head': { style: 'parallel', shape: 'tapered', cap: 'butt', color: '#a855f7', thickness: 6, length: 20, gap: 12, rotation: 45, glow: 5, parallelOffset: 12, innerScale: 0.6, innerOffset: -5, direction: 'inward', easing: 'easeOutBack', travel: 30, duration: 300, fade: true, fadeEasing: 'easeIn' },
+                'body_kill': { style: 'standard', shape: 'tapered', cap: 'butt', color: '#ef4444', thickness: 12, length: 25, gap: 15, rotation: 45, glow: 4, parallelOffset: 6, innerScale: 0.6, innerOffset: -5, direction: 'outward', easing: 'easeOutExpo', travel: 40, duration: 400, fade: true, fadeEasing: 'lateFade' },
+                'head_kill': { style: 'parallel', shape: 'tapered', cap: 'butt', color: '#ef4444', thickness: 10, length: 30, gap: 15, rotation: 45, glow: 10, parallelOffset: 16, innerScale: 0.6, innerOffset: -5, direction: 'inward', easing: 'mwPop', travel: 50, duration: 450, fade: true, fadeEasing: 'sharpCut' }
+            },
+            'ow': {
+                'body': { style: 'standard', shape: 'line', cap: 'round', color: '#ffffff', thickness: 4, length: 18, gap: 18, rotation: 45, glow: 0, parallelOffset: 6, innerScale: 0.6, innerOffset: -5, direction: 'outward', easing: 'linear', travel: 5, duration: 150, fade: true, fadeEasing: 'easeOut' },
+                'head': { style: 'inner', shape: 'line', cap: 'round', color: '#ef4444', thickness: 4, length: 22, gap: 20, rotation: 45, glow: 5, parallelOffset: 8, innerScale: 0.5, innerOffset: -8, direction: 'outward', easing: 'easeOutCubic', travel: 10, duration: 250, fade: true, fadeEasing: 'easeOut' },
+                'body_kill': { style: 'standard', shape: 'line', cap: 'square', color: '#ef4444', thickness: 6, length: 30, gap: 10, rotation: 45, glow: 0, parallelOffset: 6, innerScale: 0.6, innerOffset: -5, direction: 'outward', easing: 'easeOutBack', travel: 25, duration: 300, fade: true, fadeEasing: 'lateFade' },
+                'head_kill': { style: 'inner', shape: 'line', cap: 'square', color: '#ef4444', thickness: 6, length: 35, gap: 12, rotation: 45, glow: 10, parallelOffset: 10, innerScale: 0.4, innerOffset: 0, direction: 'outward', easing: 'easeOutBack', travel: 35, duration: 400, fade: true, fadeEasing: 'lateFade' }
+            }
+        };
 
-      // Inputs mapping
-      const inputs = {
-        style: document.getElementById("style"),
-        shape: document.getElementById("shape"),
-        cap: document.getElementById("cap"),
-        color: document.getElementById("color"),
-        colorHex: document.getElementById("colorHex"),
-        thickness: document.getElementById("thickness"),
-        length: document.getElementById("length"),
-        gap: document.getElementById("gap"),
-        offset: document.getElementById("offset"),
-        direction: document.getElementById("direction"),
-        easing: document.getElementById("easing"),
-        travel: document.getElementById("travel"),
-        duration: document.getElementById("duration"),
-        fadeToggle: document.getElementById("fadeToggle"),
-        fadeEasing: document.getElementById("fadeEasing"),
-      };
+        // --- DOM Elements ---
+        const canvas = document.getElementById('previewCanvas');
+        const ctx = canvas.getContext('2d');
+        const exportBtn = document.getElementById('exportBtn');
+        const fileInput = document.getElementById('fileInput');
 
-      const displays = {
-        thickness: document.getElementById("valThickness"),
-        length: document.getElementById("valLength"),
-        gap: document.getElementById("valGap"),
-        offset: document.getElementById("valOffset"),
-        travel: document.getElementById("valTravel"),
-        duration: document.getElementById("valDuration"),
-      };
+        // Inputs mapping
+        const inputs = {
+            style: document.getElementById('style'),
+            shape: document.getElementById('shape'),
+            cap: document.getElementById('cap'),
+            color: document.getElementById('color'),
+            colorHex: document.getElementById('colorHex'),
+            thickness: document.getElementById('thickness'),
+            length: document.getElementById('length'),
+            gap: document.getElementById('gap'),
+            rotation: document.getElementById('rotation'),
+            glow: document.getElementById('glow'),
+            parallelOffset: document.getElementById('parallelOffset'),
+            innerScale: document.getElementById('innerScale'),
+            innerOffset: document.getElementById('innerOffset'),
+            direction: document.getElementById('direction'),
+            easing: document.getElementById('easing'),
+            travel: document.getElementById('travel'),
+            duration: document.getElementById('duration'),
+            fadeToggle: document.getElementById('fadeToggle'),
+            fadeEasing: document.getElementById('fadeEasing')
+        };
 
-      // --- Initialization ---
-      function init() {
-        canvas.width = 1920;
-        canvas.height = 1080;
+        const displays = {
+            thickness: document.getElementById('valThickness'),
+            length: document.getElementById('valLength'),
+            gap: document.getElementById('valGap'),
+            rotation: document.getElementById('valRotation'),
+            glow: document.getElementById('valGlow'),
+            parallelOffset: document.getElementById('valParallelOffset'),
+            innerScale: document.getElementById('valInnerScale'),
+            innerOffset: document.getElementById('valInnerOffset'),
+            travel: document.getElementById('valTravel'),
+            duration: document.getElementById('valDuration')
+        };
 
-        Object.keys(inputs).forEach((key) => {
-          const input = inputs[key];
-          if (input.type === "checkbox") {
-            input.addEventListener("change", updateConfigFromUI);
-          } else {
-            input.addEventListener("input", updateConfigFromUI);
-          }
-        });
+        // --- Initialization ---
+        function init() {
+            canvas.width = 1920;
+            canvas.height = 1080;
+            
+            Object.keys(inputs).forEach(key => {
+                const input = inputs[key];
+                if(input.type === 'checkbox') {
+                    input.addEventListener('change', updateConfigFromUI);
+                } else {
+                    input.addEventListener('input', updateConfigFromUI);
+                }
+            });
 
-        inputs.color.addEventListener(
-          "input",
-          () => (inputs.colorHex.value = inputs.color.value),
-        );
-        inputs.colorHex.addEventListener("input", () => {
-          if (/^#[0-9A-F]{6}$/i.test(inputs.colorHex.value)) {
-            inputs.color.value = inputs.colorHex.value;
+            inputs.color.addEventListener('input', () => inputs.colorHex.value = inputs.color.value);
+            inputs.colorHex.addEventListener('input', () => {
+                if(/^#[0-9A-F]{6}$/i.test(inputs.colorHex.value)) {
+                    inputs.color.value = inputs.colorHex.value;
+                    updateConfigFromUI();
+                }
+            });
+
+            document.getElementById('bgTransparent').addEventListener('click', () => setBackground('transparent'));
+            document.getElementById('bgGreen').addEventListener('click', () => setBackground('green'));
+            document.getElementById('bgImage').addEventListener('click', () => fileInput.click());
+            
+            fileInput.addEventListener('change', handleImageUpload);
+
+            applyPreset('head'); // Start with a cool looking inner one
+            requestAnimationFrame(loop);
+        }
+
+        // --- Core Logic ---
+
+        function updateConfigFromUI() {
+            config.style = inputs.style.value;
+            config.shape = inputs.shape.value;
+            config.cap = inputs.cap.value;
+            config.color = inputs.color.value;
+            config.thickness = parseInt(inputs.thickness.value);
+            config.length = parseInt(inputs.length.value);
+            config.gap = parseInt(inputs.gap.value);
+            config.rotation = parseInt(inputs.rotation.value);
+            config.glow = parseInt(inputs.glow.value);
+            config.parallelOffset = parseInt(inputs.parallelOffset.value);
+            config.innerScale = parseFloat(inputs.innerScale.value);
+            config.innerOffset = parseInt(inputs.innerOffset.value);
+            config.direction = inputs.direction.value;
+            config.easing = inputs.easing.value;
+            config.travel = parseInt(inputs.travel.value);
+            config.duration = parseInt(inputs.duration.value);
+            config.fade = inputs.fadeToggle.checked;
+            config.fadeEasing = inputs.fadeEasing.value;
+
+            // UI Updates
+            displays.thickness.innerText = config.thickness + 'px';
+            displays.length.innerText = config.length + 'px';
+            displays.gap.innerText = config.gap + 'px';
+            displays.rotation.innerText = config.rotation + '°';
+            displays.glow.innerText = config.glow + 'px';
+            displays.parallelOffset.innerText = config.parallelOffset + 'px';
+            displays.innerScale.innerText = config.innerScale.toFixed(1) + 'x';
+            displays.innerOffset.innerText = config.innerOffset + 'px';
+            displays.travel.innerText = config.travel + 'px';
+            displays.duration.innerText = config.duration + 'ms';
+
+            // Groups
+            document.getElementById('parallelControls').classList.toggle('hidden', config.style !== 'parallel');
+            document.getElementById('innerControls').classList.toggle('hidden', config.style !== 'inner');
+            document.getElementById('fadeEasingContainer').classList.toggle('hidden', !config.fade);
+            
+            inputs.cap.disabled = (config.shape === 'tapered');
+
+            // Draw Graphs
+            drawGraph(document.getElementById('travelGraph'), easings[config.easing], '#0ea5e9');
+            drawGraph(document.getElementById('fadeGraph'), fadeEasings[config.fadeEasing], '#a1a1aa', true);
+        }
+
+        function drawGraph(canvas, easeFn, color, isFade = false) {
+            // Internal high res for crisp lines
+            canvas.width = canvas.clientWidth * 2;
+            canvas.height = canvas.clientHeight * 2;
+            const c = canvas.getContext('2d');
+            const w = canvas.width;
+            const h = canvas.height;
+            
+            c.clearRect(0,0,w,h);
+            
+            // Middle Line Guide
+            c.strokeStyle = '#27272a';
+            c.lineWidth = 2;
+            c.beginPath();
+            if(isFade) {
+                c.moveTo(0, h-10); c.lineTo(w, h-10); // Floor
+            } else {
+                c.moveTo(0, h/2); c.lineTo(w, h/2);
+            }
+            c.stroke();
+
+            // Draw Curve
+            c.strokeStyle = color;
+            c.lineWidth = 4;
+            c.lineJoin = 'round';
+            c.beginPath();
+
+            const padding = isFade ? 10 : 20;
+            const trackHeight = h - (padding * 2);
+
+            for(let i=0; i<=w; i++) {
+                let t = i/w;
+                let val = easeFn(t);
+                
+                // Map to graph height (0 is bottom, 1 is top)
+                let y = (h - padding) - (val * trackHeight);
+                
+                if (i===0) c.moveTo(i, y);
+                else c.lineTo(i, y);
+            }
+            c.stroke();
+        }
+
+        function setBackground(type) {
+            config.background = type;
+            const container = document.getElementById('canvasContainer');
+            if (type === 'transparent') {
+                container.style.backgroundColor = ''; 
+                container.classList.add('bg-checker');
+            } else if (type === 'green') {
+                container.classList.remove('bg-checker');
+                container.style.backgroundColor = '#00ff00';
+            }
+        }
+
+        function handleImageUpload(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = function(event) {
+                const img = new Image();
+                img.onload = function() {
+                    config.bgImage = img;
+                    config.background = 'image';
+                    document.getElementById('canvasContainer').classList.remove('bg-checker');
+                }
+                img.src = event.target.result;
+            }
+            reader.readAsDataURL(file);
+        }
+
+        function applyPreset(type) {
+            const game = document.getElementById('presetGame').value;
+            const p = gamePresets[game][type];
+            if (!p) return;
+            
+            Object.keys(p).forEach(k => {
+                if(inputs[k]) {
+                    if(inputs[k].type === 'checkbox') inputs[k].checked = p[k];
+                    else inputs[k].value = p[k];
+                }
+            });
+            inputs.colorHex.value = p.color;
+
             updateConfigFromUI();
-          }
-        });
-
-        document
-          .getElementById("bgTransparent")
-          .addEventListener("click", () => setBackground("transparent"));
-        document
-          .getElementById("bgGreen")
-          .addEventListener("click", () => setBackground("green"));
-        document
-          .getElementById("bgImage")
-          .addEventListener("click", () => fileInput.click());
-
-        fileInput.addEventListener("change", handleImageUpload);
-
-        // Load initial MW Body preset
-        applyPreset("body");
-        requestAnimationFrame(loop);
-      }
-
-      // --- Core Logic ---
-
-      function updateConfigFromUI() {
-        config.style = inputs.style.value;
-        config.shape = inputs.shape.value;
-        config.cap = inputs.cap.value;
-        config.color = inputs.color.value;
-        config.thickness = parseInt(inputs.thickness.value);
-        config.length = parseInt(inputs.length.value);
-        config.gap = parseInt(inputs.gap.value);
-        config.offset = parseInt(inputs.offset.value);
-        config.direction = inputs.direction.value;
-        config.easing = inputs.easing.value;
-        config.travel = parseInt(inputs.travel.value);
-        config.duration = parseInt(inputs.duration.value);
-        config.fade = inputs.fadeToggle.checked;
-        config.fadeEasing = inputs.fadeEasing.value;
-
-        // UI Updates
-        displays.thickness.innerText = config.thickness + "px";
-        displays.length.innerText = config.length + "px";
-        displays.gap.innerText = config.gap + "px";
-        displays.offset.innerText = config.offset + "px";
-        displays.travel.innerText = config.travel + "px";
-        displays.duration.innerText = config.duration + "ms";
-
-        const doubleGroup = document.getElementById("doubleControls");
-        if (config.style === "double") doubleGroup.classList.remove("hidden");
-        else doubleGroup.classList.add("hidden");
-
-        const fadeContainer = document.getElementById("fadeEasingContainer");
-        if (config.fade) fadeContainer.classList.remove("hidden");
-        else fadeContainer.classList.add("hidden");
-
-        if (config.shape === "tapered") inputs.cap.disabled = true;
-        else inputs.cap.disabled = false;
-      }
-
-      function setBackground(type) {
-        config.background = type;
-        const container = document.getElementById("canvasContainer");
-        if (type === "transparent") {
-          container.style.backgroundColor = "";
-          container.classList.add("bg-checker");
-        } else if (type === "green") {
-          container.classList.remove("bg-checker");
-          container.style.backgroundColor = "#00ff00";
-        }
-      }
-
-      function handleImageUpload(e) {
-        const file = e.target.files[0];
-        if (!file) return;
-        const reader = new FileReader();
-        reader.onload = function (event) {
-          const img = new Image();
-          img.onload = function () {
-            config.bgImage = img;
-            config.background = "image";
-            document
-              .getElementById("canvasContainer")
-              .classList.remove("bg-checker");
-          };
-          img.src = event.target.result;
-        };
-        reader.readAsDataURL(file);
-      }
-
-      function applyPreset(type) {
-        const game = document.getElementById("presetGame").value;
-        const p = gamePresets[game][type];
-        if (!p) return;
-
-        Object.keys(p).forEach((k) => {
-          if (inputs[k]) {
-            if (inputs[k].type === "checkbox") inputs[k].checked = p[k];
-            else inputs[k].value = p[k];
-          }
-        });
-        inputs.colorHex.value = p.color;
-
-        updateConfigFromUI();
-        animTime = 0;
-      }
-
-      function toggleFullscreen() {
-        const container = document.getElementById("canvasContainer");
-        if (!document.fullscreenElement) {
-          if (container.requestFullscreen) container.requestFullscreen();
-        } else {
-          if (document.exitFullscreen) document.exitFullscreen();
-        }
-      }
-
-      // --- Math & Drawing ---
-
-      const easings = {
-        linear: (t) => t,
-        easeOutQuad: (t) => 1 - (1 - t) * (1 - t),
-        easeOutCubic: (t) => 1 - Math.pow(1 - t, 3),
-        easeOutBack: (t) => {
-          const c1 = 1.70158;
-          const c3 = c1 + 1;
-          return 1 + c3 * Math.pow(t - 1, 3) + c1 * Math.pow(t - 1, 2);
-        },
-      };
-
-      const fadeEasings = {
-        linear: (t) => t,
-        easeIn: (t) => t * t, // Fades slow at first, then rapid
-        easeOut: (t) => 1 - (1 - t) * (1 - t), // Fades fast at first, then slow
-        lateFade: (t) => (t < 0.5 ? 0 : (t - 0.5) * 2), // Solid for first half, then rapid fade
-      };
-
-      function drawShape(ctx, gap, len, thickness, angleRad, color) {
-        ctx.save();
-        ctx.rotate(angleRad);
-        ctx.fillStyle = color;
-        ctx.strokeStyle = color;
-        ctx.lineWidth = thickness;
-        ctx.lineCap = config.cap;
-
-        // Core drawing instruction (single line/shape)
-        const drawPath = () => {
-          if (config.shape === "tapered") {
-            ctx.beginPath();
-            ctx.moveTo(gap, -thickness / 2);
-            ctx.lineTo(gap, thickness / 2);
-            ctx.lineTo(gap + len, 0);
-            ctx.closePath();
-            ctx.fill();
-          } else {
-            ctx.beginPath();
-            ctx.moveTo(gap, 0);
-            ctx.lineTo(gap + len, 0);
-            ctx.stroke();
-          }
-        };
-
-        // If Double Style, draw path twice perpendicular to the arm's angle
-        if (config.style === "double") {
-          const offsetHalved = config.offset / 2;
-
-          // Line 1: Translated Up
-          ctx.save();
-          ctx.translate(0, -offsetHalved);
-          drawPath();
-          ctx.restore();
-
-          // Line 2: Translated Down
-          ctx.save();
-          ctx.translate(0, offsetHalved);
-          drawPath();
-          ctx.restore();
-        } else {
-          // Single standard line
-          drawPath();
+            animTime = 0; 
         }
 
-        ctx.restore();
-      }
-
-      function renderFrame(context, w, h, progress, isExporting) {
-        context.clearRect(0, 0, w, h);
-
-        if (!isExporting) {
-          if (config.background === "image" && config.bgImage) {
-            const img = config.bgImage;
-            const scale = Math.max(w / img.width, h / img.height);
-            const x = w / 2 - (img.width / 2) * scale;
-            const y = h / 2 - (img.height / 2) * scale;
-            context.drawImage(img, x, y, img.width * scale, img.height * scale);
-            context.fillStyle = "rgba(0,0,0,0.3)";
-            context.fillRect(0, 0, w, h);
-          } else if (config.background === "green") {
-            context.fillStyle = "#00FF00";
-            context.fillRect(0, 0, w, h);
-          }
-        } else {
-          if (config.background === "green") {
-            context.fillStyle = "#00FF00";
-            context.fillRect(0, 0, w, h);
-          }
+        function toggleFullscreen() {
+            const container = document.getElementById('canvasContainer');
+            if (!document.fullscreenElement) {
+                if (container.requestFullscreen) container.requestFullscreen();
+            } else {
+                if (document.exitFullscreen) document.exitFullscreen();
+            }
         }
 
-        const easeFn = easings[config.easing] || easings.linear;
-        const easeVal = easeFn(progress);
+        // --- Render ---
 
-        let currentGap = config.gap;
-        if (config.direction === "outward") {
-          currentGap += config.travel * easeVal;
-        } else {
-          currentGap = config.gap + config.travel - config.travel * easeVal;
+        function drawArmPath(ctx, gap, len, thickness) {
+            if (config.shape === 'tapered') {
+                ctx.beginPath();
+                ctx.moveTo(gap, -thickness / 2);
+                ctx.lineTo(gap, thickness / 2);
+                ctx.lineTo(gap + len, 0);
+                ctx.closePath();
+                ctx.fill();
+            } else {
+                ctx.beginPath();
+                ctx.moveTo(gap, 0);
+                ctx.lineTo(gap + len, 0);
+                ctx.stroke();
+            }
         }
 
-        let opacity = 1;
-        if (config.fade) {
-          const fadeEaseFn =
-            fadeEasings[config.fadeEasing] || fadeEasings.linear;
-          opacity = 1 - fadeEaseFn(progress);
-          opacity = Math.max(0, Math.min(1, opacity)); // Clamp values
+        function drawShape(ctx, gap, len, thickness, angleRad, color, isMainPass = true) {
+            ctx.save();
+            ctx.rotate(angleRad);
+            ctx.fillStyle = color;
+            ctx.strokeStyle = color;
+            ctx.lineWidth = thickness;
+            ctx.lineCap = config.cap;
+
+            if(config.glow > 0) {
+                ctx.shadowBlur = config.glow;
+                ctx.shadowColor = color;
+            }
+
+            if (isMainPass && config.style === 'parallel') {
+                const offsetHalved = config.parallelOffset / 2;
+                ctx.save(); ctx.translate(0, -offsetHalved); drawArmPath(ctx, gap, len, thickness); ctx.restore();
+                ctx.save(); ctx.translate(0, offsetHalved); drawArmPath(ctx, gap, len, thickness); ctx.restore();
+            } else {
+                drawArmPath(ctx, gap, len, thickness);
+            }
+
+            // Inner Cross Logic
+            if (isMainPass && config.style === 'inner') {
+                const innerGap = Math.max(0, gap + config.innerOffset);
+                const innerLen = len * config.innerScale;
+                const innerThick = Math.max(1, thickness * config.innerScale);
+                
+                // Reset shadow for the inner pass so it doesn't double-glow aggressively 
+                ctx.shadowBlur = 0; 
+                drawShape(ctx, innerGap, innerLen, innerThick, 0, color, false);
+            }
+
+            ctx.restore();
         }
 
-        if (opacity <= 0) return;
+        function renderFrame(context, w, h, progress, isExporting) {
+            context.clearRect(0, 0, w, h);
 
-        context.save();
-        context.translate(w / 2, h / 2);
-        context.globalAlpha = opacity;
+            if (!isExporting) {
+                if (config.background === 'image' && config.bgImage) {
+                    const img = config.bgImage;
+                    const scale = Math.max(w / img.width, h / img.height);
+                    const x = (w / 2) - (img.width / 2) * scale;
+                    const y = (h / 2) - (img.height / 2) * scale;
+                    context.drawImage(img, x, y, img.width * scale, img.height * scale);
+                    context.fillStyle = 'rgba(0,0,0,0.3)';
+                    context.fillRect(0,0,w,h);
+                } else if (config.background === 'green') {
+                    context.fillStyle = '#00FF00';
+                    context.fillRect(0, 0, w, h);
+                }
+            } else {
+                if (config.background === 'green') {
+                    context.fillStyle = '#00FF00';
+                    context.fillRect(0, 0, w, h);
+                }
+            }
 
-        // Draw all 4 arms
-        for (let i = 0; i < 4; i++) {
-          // Base angles: 45, 135, 225, 315
-          const angle = (45 + i * 90) * (Math.PI / 180);
-          drawShape(
-            context,
-            currentGap,
-            config.length,
-            config.thickness,
-            angle,
-            config.color,
-          );
+            const easeFn = easings[config.easing] || easings.linear;
+            const easeVal = easeFn(progress);
+
+            let currentGap = config.gap;
+            if (config.direction === 'outward') {
+                currentGap += (config.travel * easeVal);
+            } else {
+                currentGap = (config.gap + config.travel) - (config.travel * easeVal);
+            }
+
+            let opacity = 1;
+            if (config.fade) {
+                const fadeEaseFn = fadeEasings[config.fadeEasing] || fadeEasings.linear;
+                opacity = 1 - fadeEaseFn(progress);
+                opacity = Math.max(0, Math.min(1, opacity)); 
+            }
+
+            if (opacity <= 0) return;
+
+            context.save();
+            context.translate(w / 2, h / 2);
+            context.globalAlpha = opacity;
+
+            for (let i = 0; i < 4; i++) {
+                // Apply rotation base offset
+                const angle = (config.rotation + (i * 90)) * (Math.PI / 180);
+                drawShape(context, currentGap, config.length, config.thickness, angle, config.color);
+            }
+
+            context.restore();
         }
 
-        context.restore();
-      }
+        // --- Loop ---
+        let lastTime = performance.now();
+        let animTime = 0;
+        let isExporting = false;
 
-      // --- Loop ---
-      let lastTime = performance.now();
-      let animTime = 0;
-      let isExporting = false;
+        function loop(timestamp) {
+            if (isExporting) return;
 
-      function loop(timestamp) {
-        if (isExporting) return;
+            let dt = timestamp - lastTime;
+            lastTime = timestamp;
+            if (dt > 100) dt = 16; 
 
-        let dt = timestamp - lastTime;
-        lastTime = timestamp;
-        if (dt > 100) dt = 16;
+            animTime += dt;
+            const totalCycle = config.duration + 600; 
 
-        animTime += dt;
-        const totalCycle = config.duration + 600;
-
-        let progress = 0;
-        if (animTime < config.duration) {
-          progress = animTime / config.duration;
-        } else if (animTime > totalCycle) {
-          animTime = 0;
-        } else {
-          progress = 1;
+            let progress = 0;
+            if (animTime < config.duration) {
+                progress = animTime / config.duration;
+            } else if (animTime > totalCycle) {
+                animTime = 0;
+            } else {
+                progress = 1; 
+            }
+            
+            renderFrame(ctx, canvas.width, canvas.height, Math.min(1, progress), false);
+            requestAnimationFrame(loop);
         }
 
-        renderFrame(
-          ctx,
-          canvas.width,
-          canvas.height,
-          Math.min(1, progress),
-          false,
-        );
-        requestAnimationFrame(loop);
-      }
+        // --- Export ---
+        async function exportSequence() {
+            isExporting = true;
+            const width = parseInt(document.getElementById('exportW').value) || 512;
+            const height = parseInt(document.getElementById('exportH').value) || 512;
+            
+            const btn = exportBtn;
+            const oldText = btn.innerHTML;
+            btn.innerHTML = `<span>Rendering...</span>`;
+            btn.classList.add('opacity-75', 'cursor-not-allowed');
 
-      // --- Export ---
-      async function exportSequence() {
-        isExporting = true;
-        const width = parseInt(document.getElementById("exportW").value) || 512;
-        const height =
-          parseInt(document.getElementById("exportH").value) || 512;
+            const zip = new JSZip();
+            const eCanvas = document.createElement('canvas');
+            eCanvas.width = width;
+            eCanvas.height = height;
+            const eCtx = eCanvas.getContext('2d');
 
-        const btn = exportBtn;
-        const oldText = btn.innerHTML;
-        btn.innerHTML = `<span>Rendering...</span>`;
-        btn.classList.add("opacity-75", "cursor-not-allowed");
+            const fps = 60;
+            const totalFrames = Math.ceil((config.duration / 1000) * fps);
 
-        const zip = new JSZip();
-        const eCanvas = document.createElement("canvas");
-        eCanvas.width = width;
-        eCanvas.height = height;
-        const eCtx = eCanvas.getContext("2d");
+            for(let i=0; i <= totalFrames + 5; i++) {
+                let progress = i / totalFrames;
+                if(progress > 1) progress = 1;
 
-        const fps = 60;
-        const totalFrames = Math.ceil((config.duration / 1000) * fps);
+                renderFrame(eCtx, width, height, progress, true);
+                
+                const data = eCanvas.toDataURL('image/png').split(',')[1];
+                zip.file(`hitmarker_${i.toString().padStart(3, '0')}.png`, data, {base64: true});
+            }
 
-        for (let i = 0; i <= totalFrames + 5; i++) {
-          let progress = i / totalFrames;
-          if (progress > 1) progress = 1;
+            btn.innerHTML = `<span>Compressing...</span>`;
 
-          renderFrame(eCtx, width, height, progress, true);
+            try {
+                const content = await zip.generateAsync({type: "blob"});
+                const link = document.createElement("a");
+                link.href = URL.createObjectURL(content);
+                link.download = `hitmarker_${config.style}_${width}x${height}.zip`;
+                link.click();
+            } catch(e) {
+                alert("Export failed.");
+                console.error(e);
+            }
 
-          const data = eCanvas.toDataURL("image/png").split(",")[1];
-          zip.file(`hitmarker_${i.toString().padStart(3, "0")}.png`, data, {
-            base64: true,
-          });
+            btn.innerHTML = oldText;
+            btn.classList.remove('opacity-75', 'cursor-not-allowed');
+            isExporting = false;
+            lastTime = performance.now();
+            requestAnimationFrame(loop);
         }
 
-        btn.innerHTML = `<span>Compressing...</span>`;
+        // Run
+        init();
 
-        try {
-          const content = await zip.generateAsync({ type: "blob" });
-          const link = document.createElement("a");
-          link.href = URL.createObjectURL(content);
-          link.download = `hitmarker_${config.style}_${width}x${height}.zip`;
-          link.click();
-        } catch (e) {
-          alert("Export failed.");
-          console.error(e);
-        }
-
-        btn.innerHTML = oldText;
-        btn.classList.remove("opacity-75", "cursor-not-allowed");
-        isExporting = false;
-        lastTime = performance.now();
-        requestAnimationFrame(loop);
-      }
-
-      // Run
-      init();
     </script>
-  </body>
+</body>
 </html>
