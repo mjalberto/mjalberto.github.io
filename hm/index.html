@@ -95,11 +95,6 @@
 
                     <div id="canvasContainer" class="relative w-full h-full rounded-lg overflow-hidden border border-zinc-800 bg-checker flex items-center justify-center shadow-inner">
                         <canvas id="previewCanvas" class="w-full h-full object-contain"></canvas>
-                        
-                        <div class="absolute inset-0 pointer-events-none flex items-center justify-center opacity-10">
-                            <div class="w-px h-full bg-red-500 absolute"></div>
-                            <div class="h-px w-full bg-red-500 absolute"></div>
-                        </div>
                     </div>
                 </div>
 
@@ -107,9 +102,11 @@
                     <div class="flex items-center gap-3">
                         <span class="text-xs font-bold text-zinc-500 uppercase tracking-wider whitespace-nowrap">Template:</span>
                         <select id="presetGame" class="bg-zinc-950 border border-zinc-700 rounded p-1.5 text-xs text-zinc-200 outline-none focus:border-sky-500 w-36">
-                            <option value="mw">Modern Warfare</option>
-                            <option value="apex">Apex Legends</option>
-                            <option value="ow">Overwatch</option>
+                            <option value="preset1">Preset 01 (Tactical)</option>
+                            <option value="preset2">Preset 02 (Sci-Fi)</option>
+                            <option value="preset3">Preset 03 (Heroic)</option>
+                            <option value="preset4">Preset 04 (Arcade)</option>
+                            <option value="preset5">Preset 05 (Minimal)</option>
                         </select>
                     </div>
                     <div class="h-px w-full md:w-px md:h-6 bg-zinc-700"></div>
@@ -145,6 +142,8 @@
                                 <select id="shape" class="w-full bg-zinc-950 border border-zinc-700 rounded p-2 text-xs focus:border-sky-500 outline-none">
                                     <option value="line">Flat Line</option>
                                     <option value="tapered">Pointy / Sharp</option>
+                                    <option value="diamond">Diamond</option>
+                                    <option value="chevron">Chevron</option>
                                 </select>
                             </div>
                             <div>
@@ -201,6 +200,27 @@
 
                         <div id="innerControls" class="hidden p-3 bg-zinc-950/50 rounded-lg border border-zinc-800 space-y-3">
                             <label class="text-xs font-bold text-zinc-500 block">Inner Cross Settings</label>
+                            
+                            <div class="grid grid-cols-2 gap-3 mb-2">
+                                <div>
+                                    <label class="text-xs text-zinc-400 block mb-1">Inner Shape</label>
+                                    <select id="innerShape" class="w-full bg-zinc-950 border border-zinc-700 rounded p-2 text-xs focus:border-sky-500 outline-none">
+                                        <option value="line">Flat Line</option>
+                                        <option value="tapered">Pointy / Sharp</option>
+                                        <option value="diamond">Diamond</option>
+                                        <option value="chevron">Chevron</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="text-xs text-zinc-400 block mb-1">Inner Cap</label>
+                                    <select id="innerCap" class="w-full bg-zinc-950 border border-zinc-700 rounded p-2 text-xs focus:border-sky-500 outline-none">
+                                        <option value="butt">Flat Cut</option>
+                                        <option value="round">Rounded Ends</option>
+                                        <option value="square">Boxy</option>
+                                    </select>
+                                </div>
+                            </div>
+
                             <div>
                                 <div class="flex justify-between text-xs mb-1 text-zinc-400"><label>Scale Multiplier</label><span id="valInnerScale" class="font-mono text-zinc-200">0.6x</span></div>
                                 <input type="range" id="innerScale" min="0.1" max="1.5" step="0.1" value="0.6">
@@ -208,6 +228,10 @@
                             <div>
                                 <div class="flex justify-between text-xs mb-1 text-zinc-400"><label>Gap Offset</label><span id="valInnerOffset" class="font-mono text-zinc-200">-5px</span></div>
                                 <input type="range" id="innerOffset" min="-50" max="50" value="-5">
+                            </div>
+                            <div>
+                                <div class="flex justify-between text-xs mb-1 text-zinc-400"><label>Rotation Offset</label><span id="valInnerRotation" class="font-mono text-zinc-200">0°</span></div>
+                                <input type="range" id="innerRotation" min="-90" max="90" value="0">
                             </div>
                         </div>
                     </div>
@@ -229,10 +253,13 @@
                                 <label class="text-xs text-zinc-400 block mb-1">Travel Easing</label>
                                 <select id="easing" class="w-full bg-zinc-950 border border-zinc-700 rounded p-2 text-xs outline-none">
                                     <option value="linear">Linear</option>
-                                    <option value="easeOutCubic" selected>Ease Out (Standard)</option>
-                                    <option value="easeOutExpo">Snappy (Fast Start)</option>
+                                    <option value="easeOutSine">Sine (Smooth)</option>
+                                    <option value="easeOutCubic" selected>Cubic (Standard)</option>
+                                    <option value="easeOutQuart">Quart (Strong)</option>
+                                    <option value="easeOutExpo">Expo (Fast Start)</option>
                                     <option value="easeOutBack">Elastic (Bouncy)</option>
-                                    <option value="mwPop">MW Heavy Pop (Overshoot)</option>
+                                    <option value="spring">Spring (Wobbly)</option>
+                                    <option value="heavyPop">Heavy Pop (Overshoot)</option>
                                 </select>
                             </div>
                         </div>
@@ -261,6 +288,7 @@
                                         <option value="easeIn">Ease In (Late Fade)</option>
                                         <option value="easeOut">Ease Out (Early Fade)</option>
                                         <option value="lateFade">Hold then Fade</option>
+                                        <option value="delayedCut">Long Hold, Fast Fade</option>
                                         <option value="sharpCut">Sharp Cut (Steps)</option>
                                     </select>
                                 </div>
@@ -278,15 +306,18 @@
         // --- Easing Math ---
         const easings = {
             linear: (t) => t,
+            easeOutSine: (t) => Math.sin((t * Math.PI) / 2),
             easeOutCubic: (t) => 1 - Math.pow(1 - t, 3),
+            easeOutQuart: (t) => 1 - Math.pow(1 - t, 4),
             easeOutExpo: (t) => t === 1 ? 1 : 1 - Math.pow(2, -10 * t),
             easeOutBack: (t) => {
                 const c1 = 1.70158;
                 const c3 = c1 + 1;
                 return 1 + c3 * Math.pow(t - 1, 3) + c1 * Math.pow(t - 1, 2);
             },
-            mwPop: (t) => {
-                const c1 = 3.5; // Aggressive overshoot
+            spring: (t) => 1 - (Math.cos(t * 4.5 * Math.PI) * Math.exp(-t * 6)),
+            heavyPop: (t) => {
+                const c1 = 3.5; 
                 const c3 = c1 + 1;
                 return 1 + c3 * Math.pow(t - 1, 3) + c1 * Math.pow(t - 1, 2);
             }
@@ -294,10 +325,11 @@
 
         const fadeEasings = {
             linear: (t) => t,
-            easeIn: (t) => t * t, // Fades slow at first, then rapid
-            easeOut: (t) => 1 - (1 - t) * (1 - t), // Fades fast at first, then slow
-            lateFade: (t) => t < 0.5 ? 0 : (t - 0.5) * 2, // Solid for first half
-            sharpCut: (t) => Math.floor(t * 4) / 4 // Stepped frame-by-frame feel
+            easeIn: (t) => t * t, 
+            easeOut: (t) => 1 - (1 - t) * (1 - t), 
+            lateFade: (t) => t < 0.5 ? 0 : (t - 0.5) * 2, 
+            delayedCut: (t) => t < 0.8 ? 0 : (t - 0.8) * 5,
+            sharpCut: (t) => Math.floor(t * 4) / 4 
         };
 
         // --- Configuration & State ---
@@ -305,6 +337,8 @@
             style: 'standard', // 'standard', 'parallel', 'inner'
             shape: 'line',     
             cap: 'butt',
+            innerShape: 'line',
+            innerCap: 'butt',
             color: '#ffffff',
             thickness: 4,
             length: 25,
@@ -314,8 +348,9 @@
             parallelOffset: 6,
             innerScale: 0.6,
             innerOffset: -5,
+            innerRotation: 0,
             direction: 'outward',
-            easing: 'mwPop',
+            easing: 'heavyPop',
             travel: 20,
             duration: 250,
             fade: true,
@@ -325,23 +360,35 @@
         };
 
         const gamePresets = {
-            'mw': {
-                'body': { style: 'standard', shape: 'line', cap: 'butt', color: '#ffffff', thickness: 3, length: 22, gap: 12, rotation: 45, glow: 2, parallelOffset: 6, innerScale: 0.6, innerOffset: -5, direction: 'outward', easing: 'easeOutCubic', travel: 8, duration: 150, fade: true, fadeEasing: 'linear' },
-                'head': { style: 'inner', shape: 'line', cap: 'butt', color: '#ffb300', thickness: 3, length: 25, gap: 14, rotation: 45, glow: 4, parallelOffset: 7, innerScale: 0.6, innerOffset: 2, direction: 'outward', easing: 'mwPop', travel: 12, duration: 250, fade: true, fadeEasing: 'linear' },
-                'body_kill': { style: 'standard', shape: 'line', cap: 'round', color: '#ff1100', thickness: 5, length: 30, gap: 10, rotation: 45, glow: 6, parallelOffset: 6, innerScale: 0.6, innerOffset: -5, direction: 'outward', easing: 'mwPop', travel: 25, duration: 350, fade: true, fadeEasing: 'lateFade' },
-                'head_kill': { style: 'inner', shape: 'line', cap: 'butt', color: '#ff1100', thickness: 4, length: 35, gap: 12, rotation: 45, glow: 8, parallelOffset: 9, innerScale: 0.5, innerOffset: 5, direction: 'outward', easing: 'mwPop', travel: 35, duration: 450, fade: true, fadeEasing: 'lateFade' }
+            'preset1': {
+                'body': { style: 'standard', shape: 'line', cap: 'butt', innerShape: 'line', innerCap: 'butt', color: '#ffffff', thickness: 3, length: 22, gap: 12, rotation: 45, glow: 2, parallelOffset: 6, innerScale: 0.6, innerOffset: -5, innerRotation: 0, direction: 'outward', easing: 'easeOutCubic', travel: 8, duration: 150, fade: true, fadeEasing: 'linear' },
+                'head': { style: 'inner', shape: 'line', cap: 'butt', innerShape: 'line', innerCap: 'butt', color: '#ffb300', thickness: 3, length: 25, gap: 14, rotation: 45, glow: 4, parallelOffset: 7, innerScale: 0.6, innerOffset: 2, innerRotation: 0, direction: 'outward', easing: 'heavyPop', travel: 12, duration: 250, fade: true, fadeEasing: 'linear' },
+                'body_kill': { style: 'standard', shape: 'line', cap: 'round', innerShape: 'line', innerCap: 'butt', color: '#ff1100', thickness: 5, length: 30, gap: 10, rotation: 45, glow: 6, parallelOffset: 6, innerScale: 0.6, innerOffset: -5, innerRotation: 0, direction: 'outward', easing: 'heavyPop', travel: 25, duration: 350, fade: true, fadeEasing: 'lateFade' },
+                'head_kill': { style: 'inner', shape: 'line', cap: 'butt', innerShape: 'line', innerCap: 'butt', color: '#ff1100', thickness: 4, length: 35, gap: 12, rotation: 45, glow: 8, parallelOffset: 9, innerScale: 0.5, innerOffset: 5, innerRotation: 0, direction: 'outward', easing: 'heavyPop', travel: 35, duration: 450, fade: true, fadeEasing: 'lateFade' }
             },
-            'apex': {
-                'body': { style: 'standard', shape: 'tapered', cap: 'butt', color: '#ffffff', thickness: 8, length: 15, gap: 10, rotation: 45, glow: 0, parallelOffset: 6, innerScale: 0.6, innerOffset: -5, direction: 'outward', easing: 'easeOutExpo', travel: 15, duration: 200, fade: true, fadeEasing: 'linear' },
-                'head': { style: 'parallel', shape: 'tapered', cap: 'butt', color: '#a855f7', thickness: 6, length: 20, gap: 12, rotation: 45, glow: 5, parallelOffset: 12, innerScale: 0.6, innerOffset: -5, direction: 'inward', easing: 'easeOutBack', travel: 30, duration: 300, fade: true, fadeEasing: 'easeIn' },
-                'body_kill': { style: 'standard', shape: 'tapered', cap: 'butt', color: '#ef4444', thickness: 12, length: 25, gap: 15, rotation: 45, glow: 4, parallelOffset: 6, innerScale: 0.6, innerOffset: -5, direction: 'outward', easing: 'easeOutExpo', travel: 40, duration: 400, fade: true, fadeEasing: 'lateFade' },
-                'head_kill': { style: 'parallel', shape: 'tapered', cap: 'butt', color: '#ef4444', thickness: 10, length: 30, gap: 15, rotation: 45, glow: 10, parallelOffset: 16, innerScale: 0.6, innerOffset: -5, direction: 'inward', easing: 'mwPop', travel: 50, duration: 450, fade: true, fadeEasing: 'sharpCut' }
+            'preset2': {
+                'body': { style: 'standard', shape: 'tapered', cap: 'butt', innerShape: 'tapered', innerCap: 'butt', color: '#ffffff', thickness: 8, length: 15, gap: 10, rotation: 45, glow: 0, parallelOffset: 6, innerScale: 0.6, innerOffset: -5, innerRotation: 0, direction: 'outward', easing: 'easeOutExpo', travel: 15, duration: 200, fade: true, fadeEasing: 'linear' },
+                'head': { style: 'parallel', shape: 'tapered', cap: 'butt', innerShape: 'tapered', innerCap: 'butt', color: '#a855f7', thickness: 6, length: 20, gap: 12, rotation: 45, glow: 5, parallelOffset: 12, innerScale: 0.6, innerOffset: -5, innerRotation: 0, direction: 'inward', easing: 'easeOutBack', travel: 30, duration: 300, fade: true, fadeEasing: 'easeIn' },
+                'body_kill': { style: 'standard', shape: 'tapered', cap: 'butt', innerShape: 'tapered', innerCap: 'butt', color: '#ef4444', thickness: 12, length: 25, gap: 15, rotation: 45, glow: 4, parallelOffset: 6, innerScale: 0.6, innerOffset: -5, innerRotation: 0, direction: 'outward', easing: 'easeOutExpo', travel: 40, duration: 400, fade: true, fadeEasing: 'lateFade' },
+                'head_kill': { style: 'parallel', shape: 'tapered', cap: 'butt', innerShape: 'tapered', innerCap: 'butt', color: '#ef4444', thickness: 10, length: 30, gap: 15, rotation: 45, glow: 10, parallelOffset: 16, innerScale: 0.6, innerOffset: -5, innerRotation: 0, direction: 'inward', easing: 'heavyPop', travel: 50, duration: 450, fade: true, fadeEasing: 'sharpCut' }
             },
-            'ow': {
-                'body': { style: 'standard', shape: 'line', cap: 'round', color: '#ffffff', thickness: 4, length: 18, gap: 18, rotation: 45, glow: 0, parallelOffset: 6, innerScale: 0.6, innerOffset: -5, direction: 'outward', easing: 'linear', travel: 5, duration: 150, fade: true, fadeEasing: 'easeOut' },
-                'head': { style: 'inner', shape: 'line', cap: 'round', color: '#ef4444', thickness: 4, length: 22, gap: 20, rotation: 45, glow: 5, parallelOffset: 8, innerScale: 0.5, innerOffset: -8, direction: 'outward', easing: 'easeOutCubic', travel: 10, duration: 250, fade: true, fadeEasing: 'easeOut' },
-                'body_kill': { style: 'standard', shape: 'line', cap: 'square', color: '#ef4444', thickness: 6, length: 30, gap: 10, rotation: 45, glow: 0, parallelOffset: 6, innerScale: 0.6, innerOffset: -5, direction: 'outward', easing: 'easeOutBack', travel: 25, duration: 300, fade: true, fadeEasing: 'lateFade' },
-                'head_kill': { style: 'inner', shape: 'line', cap: 'square', color: '#ef4444', thickness: 6, length: 35, gap: 12, rotation: 45, glow: 10, parallelOffset: 10, innerScale: 0.4, innerOffset: 0, direction: 'outward', easing: 'easeOutBack', travel: 35, duration: 400, fade: true, fadeEasing: 'lateFade' }
+            'preset3': {
+                'body': { style: 'standard', shape: 'line', cap: 'round', innerShape: 'line', innerCap: 'round', color: '#ffffff', thickness: 4, length: 18, gap: 18, rotation: 45, glow: 0, parallelOffset: 6, innerScale: 0.6, innerOffset: -5, innerRotation: 0, direction: 'outward', easing: 'easeOutSine', travel: 5, duration: 150, fade: true, fadeEasing: 'easeOut' },
+                'head': { style: 'inner', shape: 'line', cap: 'round', innerShape: 'line', innerCap: 'round', color: '#ef4444', thickness: 4, length: 22, gap: 20, rotation: 45, glow: 5, parallelOffset: 8, innerScale: 0.5, innerOffset: -8, innerRotation: 0, direction: 'outward', easing: 'easeOutCubic', travel: 10, duration: 250, fade: true, fadeEasing: 'easeOut' },
+                'body_kill': { style: 'standard', shape: 'line', cap: 'square', innerShape: 'line', innerCap: 'square', color: '#ef4444', thickness: 6, length: 30, gap: 10, rotation: 45, glow: 0, parallelOffset: 6, innerScale: 0.6, innerOffset: -5, innerRotation: 0, direction: 'outward', easing: 'easeOutBack', travel: 25, duration: 300, fade: true, fadeEasing: 'lateFade' },
+                'head_kill': { style: 'inner', shape: 'line', cap: 'square', innerShape: 'diamond', innerCap: 'butt', color: '#ef4444', thickness: 6, length: 35, gap: 12, rotation: 45, glow: 10, parallelOffset: 10, innerScale: 1.0, innerOffset: -10, innerRotation: 45, direction: 'outward', easing: 'easeOutBack', travel: 35, duration: 400, fade: true, fadeEasing: 'lateFade' }
+            },
+            'preset4': {
+                'body': { style: 'inner', shape: 'chevron', cap: 'butt', innerShape: 'line', innerCap: 'round', color: '#22c55e', thickness: 6, length: 15, gap: 20, rotation: 0, glow: 4, parallelOffset: 6, innerScale: 0.8, innerOffset: -10, innerRotation: 45, direction: 'inward', easing: 'spring', travel: 20, duration: 300, fade: true, fadeEasing: 'sharpCut' },
+                'head': { style: 'parallel', shape: 'diamond', cap: 'butt', innerShape: 'line', innerCap: 'butt', color: '#eab308', thickness: 8, length: 25, gap: 10, rotation: 0, glow: 8, parallelOffset: 14, innerScale: 0.6, innerOffset: 0, innerRotation: 0, direction: 'outward', easing: 'easeOutQuart', travel: 35, duration: 350, fade: true, fadeEasing: 'delayedCut' },
+                'body_kill': { style: 'standard', shape: 'chevron', cap: 'butt', innerShape: 'line', innerCap: 'butt', color: '#ef4444', thickness: 10, length: 20, gap: 5, rotation: 45, glow: 5, parallelOffset: 6, innerScale: 0.6, innerOffset: 0, innerRotation: 0, direction: 'outward', easing: 'heavyPop', travel: 40, duration: 400, fade: true, fadeEasing: 'lateFade' },
+                'head_kill': { style: 'inner', shape: 'diamond', cap: 'butt', innerShape: 'chevron', innerCap: 'butt', color: '#ef4444', thickness: 12, length: 40, gap: 5, rotation: 45, glow: 15, parallelOffset: 6, innerScale: 0.5, innerOffset: 15, innerRotation: 45, direction: 'outward', easing: 'spring', travel: 50, duration: 600, fade: true, fadeEasing: 'delayedCut' }
+            },
+            'preset5': {
+                'body': { style: 'standard', shape: 'line', cap: 'butt', innerShape: 'line', innerCap: 'butt', color: '#a1a1aa', thickness: 2, length: 10, gap: 8, rotation: 45, glow: 0, parallelOffset: 6, innerScale: 0.6, innerOffset: 0, innerRotation: 0, direction: 'outward', easing: 'linear', travel: 5, duration: 100, fade: true, fadeEasing: 'linear' },
+                'head': { style: 'inner', shape: 'line', cap: 'butt', innerShape: 'line', innerCap: 'butt', color: '#38bdf8', thickness: 2, length: 15, gap: 10, rotation: 45, glow: 0, parallelOffset: 6, innerScale: 0.5, innerOffset: 2, innerRotation: 0, direction: 'outward', easing: 'easeOutQuad', travel: 8, duration: 150, fade: true, fadeEasing: 'linear' },
+                'body_kill': { style: 'parallel', shape: 'line', cap: 'butt', innerShape: 'line', innerCap: 'butt', color: '#fb923c', thickness: 2, length: 18, gap: 12, rotation: 45, glow: 0, parallelOffset: 4, innerScale: 0.6, innerOffset: 0, innerRotation: 0, direction: 'outward', easing: 'easeOutCubic', travel: 12, duration: 200, fade: true, fadeEasing: 'linear' },
+                'head_kill': { style: 'inner', shape: 'line', cap: 'butt', innerShape: 'diamond', innerCap: 'butt', color: '#f87171', thickness: 3, length: 22, gap: 15, rotation: 45, glow: 0, parallelOffset: 6, innerScale: 0.8, innerOffset: -5, innerRotation: 45, direction: 'outward', easing: 'easeOutQuart', travel: 20, duration: 250, fade: true, fadeEasing: 'easeIn' }
             }
         };
 
@@ -356,6 +403,8 @@
             style: document.getElementById('style'),
             shape: document.getElementById('shape'),
             cap: document.getElementById('cap'),
+            innerShape: document.getElementById('innerShape'),
+            innerCap: document.getElementById('innerCap'),
             color: document.getElementById('color'),
             colorHex: document.getElementById('colorHex'),
             thickness: document.getElementById('thickness'),
@@ -366,6 +415,7 @@
             parallelOffset: document.getElementById('parallelOffset'),
             innerScale: document.getElementById('innerScale'),
             innerOffset: document.getElementById('innerOffset'),
+            innerRotation: document.getElementById('innerRotation'),
             direction: document.getElementById('direction'),
             easing: document.getElementById('easing'),
             travel: document.getElementById('travel'),
@@ -383,6 +433,7 @@
             parallelOffset: document.getElementById('valParallelOffset'),
             innerScale: document.getElementById('valInnerScale'),
             innerOffset: document.getElementById('valInnerOffset'),
+            innerRotation: document.getElementById('valInnerRotation'),
             travel: document.getElementById('valTravel'),
             duration: document.getElementById('valDuration')
         };
@@ -415,7 +466,7 @@
             
             fileInput.addEventListener('change', handleImageUpload);
 
-            applyPreset('head'); // Start with a cool looking inner one
+            applyPreset('head'); 
             requestAnimationFrame(loop);
         }
 
@@ -425,6 +476,8 @@
             config.style = inputs.style.value;
             config.shape = inputs.shape.value;
             config.cap = inputs.cap.value;
+            config.innerShape = inputs.innerShape.value;
+            config.innerCap = inputs.innerCap.value;
             config.color = inputs.color.value;
             config.thickness = parseInt(inputs.thickness.value);
             config.length = parseInt(inputs.length.value);
@@ -434,6 +487,7 @@
             config.parallelOffset = parseInt(inputs.parallelOffset.value);
             config.innerScale = parseFloat(inputs.innerScale.value);
             config.innerOffset = parseInt(inputs.innerOffset.value);
+            config.innerRotation = parseInt(inputs.innerRotation.value);
             config.direction = inputs.direction.value;
             config.easing = inputs.easing.value;
             config.travel = parseInt(inputs.travel.value);
@@ -450,6 +504,7 @@
             displays.parallelOffset.innerText = config.parallelOffset + 'px';
             displays.innerScale.innerText = config.innerScale.toFixed(1) + 'x';
             displays.innerOffset.innerText = config.innerOffset + 'px';
+            displays.innerRotation.innerText = config.innerRotation + '°';
             displays.travel.innerText = config.travel + 'px';
             displays.duration.innerText = config.duration + 'ms';
 
@@ -458,7 +513,9 @@
             document.getElementById('innerControls').classList.toggle('hidden', config.style !== 'inner');
             document.getElementById('fadeEasingContainer').classList.toggle('hidden', !config.fade);
             
-            inputs.cap.disabled = (config.shape === 'tapered');
+            // Disable caps if shape uses fill logic
+            inputs.cap.disabled = (config.shape !== 'line');
+            inputs.innerCap.disabled = (config.innerShape !== 'line');
 
             // Draw Graphs
             drawGraph(document.getElementById('travelGraph'), easings[config.easing], '#0ea5e9');
@@ -466,7 +523,6 @@
         }
 
         function drawGraph(canvas, easeFn, color, isFade = false) {
-            // Internal high res for crisp lines
             canvas.width = canvas.clientWidth * 2;
             canvas.height = canvas.clientHeight * 2;
             const c = canvas.getContext('2d');
@@ -475,18 +531,16 @@
             
             c.clearRect(0,0,w,h);
             
-            // Middle Line Guide
             c.strokeStyle = '#27272a';
             c.lineWidth = 2;
             c.beginPath();
             if(isFade) {
-                c.moveTo(0, h-10); c.lineTo(w, h-10); // Floor
+                c.moveTo(0, h-10); c.lineTo(w, h-10);
             } else {
                 c.moveTo(0, h/2); c.lineTo(w, h/2);
             }
             c.stroke();
 
-            // Draw Curve
             c.strokeStyle = color;
             c.lineWidth = 4;
             c.lineJoin = 'round';
@@ -498,10 +552,7 @@
             for(let i=0; i<=w; i++) {
                 let t = i/w;
                 let val = easeFn(t);
-                
-                // Map to graph height (0 is bottom, 1 is top)
                 let y = (h - padding) - (val * trackHeight);
-                
                 if (i===0) c.moveTo(i, y);
                 else c.lineTo(i, y);
             }
@@ -564,12 +615,30 @@
 
         // --- Render ---
 
-        function drawArmPath(ctx, gap, len, thickness) {
-            if (config.shape === 'tapered') {
+        function drawArmPath(ctx, gap, len, thickness, currentShape) {
+            if (currentShape === 'tapered') {
                 ctx.beginPath();
                 ctx.moveTo(gap, -thickness / 2);
                 ctx.lineTo(gap, thickness / 2);
                 ctx.lineTo(gap + len, 0);
+                ctx.closePath();
+                ctx.fill();
+            } else if (currentShape === 'diamond') {
+                ctx.beginPath();
+                ctx.moveTo(gap, 0);
+                ctx.lineTo(gap + len/2, thickness/2);
+                ctx.lineTo(gap + len, 0);
+                ctx.lineTo(gap + len/2, -thickness/2);
+                ctx.closePath();
+                ctx.fill();
+            } else if (currentShape === 'chevron') {
+                ctx.beginPath();
+                ctx.moveTo(gap, -thickness/2);
+                ctx.lineTo(gap + len/2, 0);
+                ctx.lineTo(gap, thickness/2);
+                ctx.lineTo(gap + thickness, thickness/2);
+                ctx.lineTo(gap + len/2 + thickness, 0);
+                ctx.lineTo(gap + thickness, -thickness/2);
                 ctx.closePath();
                 ctx.fill();
             } else {
@@ -580,13 +649,16 @@
             }
         }
 
-        function drawShape(ctx, gap, len, thickness, angleRad, color, isMainPass = true) {
+        function drawShape(ctx, gap, len, thickness, angleRad, color, isMainPass = true, shapeOverride = null, capOverride = null) {
+            const currentShape = shapeOverride || config.shape;
+            const currentCap = capOverride || config.cap;
+            
             ctx.save();
             ctx.rotate(angleRad);
             ctx.fillStyle = color;
             ctx.strokeStyle = color;
             ctx.lineWidth = thickness;
-            ctx.lineCap = config.cap;
+            ctx.lineCap = currentCap;
 
             if(config.glow > 0) {
                 ctx.shadowBlur = config.glow;
@@ -595,21 +667,21 @@
 
             if (isMainPass && config.style === 'parallel') {
                 const offsetHalved = config.parallelOffset / 2;
-                ctx.save(); ctx.translate(0, -offsetHalved); drawArmPath(ctx, gap, len, thickness); ctx.restore();
-                ctx.save(); ctx.translate(0, offsetHalved); drawArmPath(ctx, gap, len, thickness); ctx.restore();
+                ctx.save(); ctx.translate(0, -offsetHalved); drawArmPath(ctx, gap, len, thickness, currentShape); ctx.restore();
+                ctx.save(); ctx.translate(0, offsetHalved); drawArmPath(ctx, gap, len, thickness, currentShape); ctx.restore();
             } else {
-                drawArmPath(ctx, gap, len, thickness);
+                drawArmPath(ctx, gap, len, thickness, currentShape);
             }
 
             // Inner Cross Logic
             if (isMainPass && config.style === 'inner') {
-                const innerGap = Math.max(0, gap + config.innerOffset);
+                const innerGap = gap + config.innerOffset; 
                 const innerLen = len * config.innerScale;
                 const innerThick = Math.max(1, thickness * config.innerScale);
+                const innerAngle = (config.innerRotation * (Math.PI / 180));
                 
-                // Reset shadow for the inner pass so it doesn't double-glow aggressively 
                 ctx.shadowBlur = 0; 
-                drawShape(ctx, innerGap, innerLen, innerThick, 0, color, false);
+                drawShape(ctx, innerGap, innerLen, innerThick, innerAngle, color, false, config.innerShape, config.innerCap);
             }
 
             ctx.restore();
@@ -662,7 +734,6 @@
             context.globalAlpha = opacity;
 
             for (let i = 0; i < 4; i++) {
-                // Apply rotation base offset
                 const angle = (config.rotation + (i * 90)) * (Math.PI / 180);
                 drawShape(context, currentGap, config.length, config.thickness, angle, config.color);
             }
