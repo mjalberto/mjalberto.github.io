@@ -146,6 +146,7 @@
                                 <select id="shape" class="w-full bg-zinc-950 border border-zinc-700 rounded p-2 text-xs focus:border-sky-500 outline-none">
                                     <option value="line">Flat Line</option>
                                     <option value="tapered">Pointy</option>
+                                    <option value="soft-taper">Soft Taper</option>
                                     <option value="diamond">Diamond</option>
                                     <option value="chevron">Chevron</option>
                                 </select>
@@ -216,6 +217,7 @@
                                     <select id="innerShape" class="w-full bg-zinc-950 border border-zinc-700 rounded p-2 text-xs focus:border-sky-500 outline-none">
                                         <option value="line">Flat Line</option>
                                         <option value="tapered">Pointy</option>
+                                        <option value="soft-taper">Soft Taper</option>
                                         <option value="diamond">Diamond</option>
                                         <option value="chevron">Chevron</option>
                                     </select>
@@ -386,8 +388,8 @@
             },
             'preset2': {
                 'body': { style: 'standard', shape: 'tapered', cap: 'butt', capPosition: 'both', innerShape: 'tapered', innerCap: 'butt', innerCapPosition: 'both', color: '#ffffff', thickness: 8, length: 15, gap: 10, rotation: 45, parallelOffset: 6, innerScale: 0.6, innerOffset: -5, innerRotation: 0, direction: 'outward', easing: 'easeOutExpo', travel: 15, duration: 200, fade: true, fadeEasing: 'linear' },
-                'head': { style: 'parallel', shape: 'tapered', cap: 'butt', capPosition: 'both', innerShape: 'tapered', innerCap: 'butt', innerCapPosition: 'both', color: '#a855f7', thickness: 6, length: 20, gap: 12, rotation: 45, parallelOffset: 12, innerScale: 0.6, innerOffset: -5, innerRotation: 0, direction: 'inward', easing: 'easeOutBack', travel: 30, duration: 300, fade: true, fadeEasing: 'easeIn' },
-                'body_kill': { style: 'standard', shape: 'tapered', cap: 'butt', capPosition: 'both', innerShape: 'tapered', innerCap: 'butt', innerCapPosition: 'both', color: '#ef4444', thickness: 12, length: 25, gap: 15, rotation: 45, parallelOffset: 6, innerScale: 0.6, innerOffset: -5, innerRotation: 0, direction: 'outward', easing: 'easeOutExpo', travel: 40, duration: 400, fade: true, fadeEasing: 'lateFade' },
+                'head': { style: 'parallel', shape: 'soft-taper', cap: 'butt', capPosition: 'both', innerShape: 'soft-taper', innerCap: 'butt', innerCapPosition: 'both', color: '#a855f7', thickness: 6, length: 20, gap: 12, rotation: 45, parallelOffset: 12, innerScale: 0.6, innerOffset: -5, innerRotation: 0, direction: 'inward', easing: 'easeOutBack', travel: 30, duration: 300, fade: true, fadeEasing: 'easeIn' },
+                'body_kill': { style: 'standard', shape: 'soft-taper', cap: 'butt', capPosition: 'both', innerShape: 'tapered', innerCap: 'butt', innerCapPosition: 'both', color: '#ef4444', thickness: 12, length: 25, gap: 15, rotation: 45, parallelOffset: 6, innerScale: 0.6, innerOffset: -5, innerRotation: 0, direction: 'outward', easing: 'easeOutExpo', travel: 40, duration: 400, fade: true, fadeEasing: 'lateFade' },
                 'head_kill': { style: 'parallel', shape: 'tapered', cap: 'butt', capPosition: 'both', innerShape: 'tapered', innerCap: 'butt', innerCapPosition: 'both', color: '#ef4444', thickness: 10, length: 30, gap: 15, rotation: 45, parallelOffset: 16, innerScale: 0.6, innerOffset: -5, innerRotation: 0, direction: 'inward', easing: 'heavyPop', travel: 50, duration: 450, fade: true, fadeEasing: 'sharpCut' }
             },
             'preset3': {
@@ -406,7 +408,7 @@
                 'body': { style: 'standard', shape: 'line', cap: 'butt', capPosition: 'both', innerShape: 'line', innerCap: 'butt', innerCapPosition: 'both', color: '#a1a1aa', thickness: 2, length: 10, gap: 8, rotation: 45, parallelOffset: 6, innerScale: 0.6, innerOffset: 0, innerRotation: 0, direction: 'outward', easing: 'linear', travel: 5, duration: 100, fade: true, fadeEasing: 'linear' },
                 'head': { style: 'inner', shape: 'line', cap: 'butt', capPosition: 'both', innerShape: 'line', innerCap: 'butt', innerCapPosition: 'both', color: '#38bdf8', thickness: 2, length: 15, gap: 10, rotation: 45, parallelOffset: 6, innerScale: 0.5, innerOffset: 2, innerRotation: 0, direction: 'outward', easing: 'easeOutQuad', travel: 8, duration: 150, fade: true, fadeEasing: 'linear' },
                 'body_kill': { style: 'parallel', shape: 'line', cap: 'butt', capPosition: 'both', innerShape: 'line', innerCap: 'butt', innerCapPosition: 'both', color: '#fb923c', thickness: 2, length: 18, gap: 12, rotation: 45, parallelOffset: 4, innerScale: 0.6, innerOffset: 0, innerRotation: 0, direction: 'outward', easing: 'easeOutCubic', travel: 12, duration: 200, fade: true, fadeEasing: 'linear' },
-                'head_kill': { style: 'inner', shape: 'line', cap: 'butt', capPosition: 'both', innerShape: 'diamond', innerCap: 'butt', innerCapPosition: 'both', color: '#f87171', thickness: 3, length: 22, gap: 15, rotation: 45, parallelOffset: 6, innerScale: 0.8, innerOffset: -5, innerRotation: 45, direction: 'outward', easing: 'easeOutQuart', travel: 20, duration: 250, fade: true, fadeEasing: 'easeIn' }
+                'head_kill': { style: 'inner', shape: 'line', cap: 'butt', capPosition: 'both', innerShape: 'soft-taper', innerCap: 'butt', innerCapPosition: 'both', color: '#f87171', thickness: 3, length: 22, gap: 15, rotation: 45, parallelOffset: 6, innerScale: 0.8, innerOffset: -5, innerRotation: 45, direction: 'outward', easing: 'easeOutQuart', travel: 20, duration: 250, fade: true, fadeEasing: 'easeIn' }
             },
             'preset6': {
                 'body': { style: 'inner', shape: 'line', cap: 'diamond', capPosition: 'outer', innerShape: 'diamond', innerCap: 'butt', innerCapPosition: 'both', color: '#14b8a6', thickness: 4, length: 18, gap: 14, rotation: 0, parallelOffset: 6, innerScale: 0.5, innerOffset: 5, innerRotation: 45, direction: 'outward', easing: 'easeOutExpo', travel: 10, duration: 200, fade: true, fadeEasing: 'linear' },
@@ -416,7 +418,7 @@
             },
             'preset7': {
                 'body': { style: 'parallel', shape: 'line', cap: 'butt', capPosition: 'both', innerShape: 'line', innerCap: 'butt', innerCapPosition: 'both', color: '#0ea5e9', thickness: 3, length: 20, gap: 15, rotation: 45, parallelOffset: 8, innerScale: 0.6, innerOffset: -5, innerRotation: 0, direction: 'inward', easing: 'easeOutQuart', travel: 15, duration: 150, fade: true, fadeEasing: 'sharpCut' },
-                'head': { style: 'parallel', shape: 'line', cap: 'butt', capPosition: 'both', innerShape: 'line', innerCap: 'butt', innerCapPosition: 'both', color: '#d946ef', thickness: 4, length: 25, gap: 18, rotation: 45, parallelOffset: 12, innerScale: 0.6, innerOffset: -5, innerRotation: 0, direction: 'outward', easing: 'easeOutBack', travel: 25, duration: 250, fade: true, fadeEasing: 'sharpCut' },
+                'head': { style: 'parallel', shape: 'soft-taper', cap: 'butt', capPosition: 'both', innerShape: 'line', innerCap: 'butt', innerCapPosition: 'both', color: '#d946ef', thickness: 4, length: 25, gap: 18, rotation: 45, parallelOffset: 12, innerScale: 0.6, innerOffset: -5, innerRotation: 0, direction: 'outward', easing: 'easeOutBack', travel: 25, duration: 250, fade: true, fadeEasing: 'sharpCut' },
                 'body_kill': { style: 'inner', shape: 'line', cap: 'butt', capPosition: 'both', innerShape: 'line', innerCap: 'butt', innerCapPosition: 'both', color: '#ec4899', thickness: 8, length: 30, gap: 10, rotation: 0, parallelOffset: 6, innerScale: 0.4, innerOffset: 5, innerRotation: 45, direction: 'outward', easing: 'easeOutExpo', travel: 30, duration: 300, fade: true, fadeEasing: 'delayedCut' },
                 'head_kill': { style: 'inner', shape: 'tapered', cap: 'butt', capPosition: 'both', innerShape: 'tapered', innerCap: 'butt', innerCapPosition: 'both', color: '#ec4899', thickness: 15, length: 35, gap: 10, rotation: 45, parallelOffset: 10, innerScale: 1.2, innerOffset: 20, innerRotation: 90, direction: 'inward', easing: 'heavyPop', travel: 50, duration: 450, fade: true, fadeEasing: 'sharpCut' }
             }
@@ -653,6 +655,15 @@
                 ctx.moveTo(gap, -thickness / 2);
                 ctx.lineTo(gap, thickness / 2);
                 ctx.lineTo(gap + len, 0);
+                ctx.closePath();
+                ctx.fill();
+            } else if (currentShape === 'soft-taper') {
+                const tipRadius = Math.max(0.5, thickness * 0.3);
+                ctx.beginPath();
+                ctx.moveTo(gap, -thickness / 2);
+                ctx.lineTo(gap + len - tipRadius, -tipRadius);
+                ctx.arc(gap + len - tipRadius, 0, tipRadius, -Math.PI/2, Math.PI/2, false);
+                ctx.lineTo(gap, thickness / 2);
                 ctx.closePath();
                 ctx.fill();
             } else if (currentShape === 'diamond') {
