@@ -1,0 +1,1988 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Hitmarker VFX Sequencer</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+
+    <style>
+      body {
+        font-family: "Inter", ui-sans-serif, system-ui, sans-serif;
+      }
+
+      ::-webkit-scrollbar {
+        width: 8px;
+        height: 8px;
+      }
+      ::-webkit-scrollbar-track {
+        background: #18181b;
+        border-radius: 4px;
+      }
+      ::-webkit-scrollbar-thumb {
+        background: #3f3f46;
+        border-radius: 4px;
+      }
+      ::-webkit-scrollbar-thumb:hover {
+        background: #52525b;
+      }
+
+      .bg-checker {
+        background-image:
+          linear-gradient(
+            45deg,
+            #1f2229 25%,
+            transparent 25%,
+            transparent 75%,
+            #1f2229 75%,
+            #1f2229
+          ),
+          linear-gradient(
+            45deg,
+            #1f2229 25%,
+            transparent 25%,
+            transparent 75%,
+            #1f2229 75%,
+            #1f2229
+          );
+        background-size: 20px 20px;
+        background-position:
+          0 0,
+          10px 10px;
+        background-color: #111318;
+      }
+
+      input[type="range"] {
+        -webkit-appearance: none;
+        width: 100%;
+        background: transparent;
+      }
+      input[type="range"]::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        height: 16px;
+        width: 16px;
+        border-radius: 50%;
+        background: #0ea5e9;
+        cursor: pointer;
+        margin-top: -6px;
+        box-shadow: 0 0 10px rgba(14, 165, 233, 0.5);
+        transition: transform 0.1s;
+      }
+      input[type="range"]::-webkit-slider-thumb:hover {
+        transform: scale(1.2);
+      }
+      input[type="range"]::-webkit-slider-runnable-track {
+        width: 100%;
+        height: 4px;
+        cursor: pointer;
+        background: #3f3f46;
+        border-radius: 2px;
+      }
+
+      input[type="number"]::-webkit-inner-spin-button,
+      input[type="number"]::-webkit-outer-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+      }
+
+      .track-panel {
+        background: linear-gradient(
+          180deg,
+          rgba(24, 24, 27, 0.8) 0%,
+          rgba(9, 9, 11, 0.8) 100%
+        );
+        border: 1px solid #0ea5e9;
+      }
+    </style>
+  </head>
+  <body
+    class="bg-zinc-950 text-zinc-100 min-h-screen p-4 md:p-6 selection:bg-sky-500 selection:text-white"
+  >
+    <div class="max-w-[1600px] mx-auto">
+      <header
+        class="mb-6 border-b border-zinc-800 pb-4 flex flex-col lg:flex-row lg:justify-between lg:items-end gap-4"
+      >
+        <div>
+          <h1
+            class="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-sky-400 via-blue-500 to-emerald-400"
+          >
+            Hitmarker VFX Sequencer
+          </h1>
+          <p class="text-zinc-400 text-sm mt-1">
+            Design, Sequence, and Export 60FPS Image Sequences
+          </p>
+        </div>
+
+        <div class="flex flex-wrap items-end gap-3">
+          <div
+            class="bg-zinc-900 p-2 rounded-xl border border-zinc-800 flex gap-4 items-center px-4"
+          >
+            <div>
+              <label
+                class="text-[10px] uppercase text-zinc-500 font-bold block mb-1"
+                >Export Size</label
+              >
+              <div class="flex items-center gap-2">
+                <input
+                  type="number"
+                  id="exportW"
+                  value="512"
+                  class="w-16 bg-zinc-950 border border-zinc-700 rounded px-2 py-1 text-xs focus:border-sky-500 outline-none text-center"
+                />
+                <span class="text-zinc-600 text-xs">x</span>
+                <input
+                  type="number"
+                  id="exportH"
+                  value="512"
+                  class="w-16 bg-zinc-950 border border-zinc-700 rounded px-2 py-1 text-xs focus:border-sky-500 outline-none text-center"
+                />
+              </div>
+            </div>
+          </div>
+
+          <button
+            id="exportBtn"
+            onclick="exportSequence()"
+            class="bg-gradient-to-r from-sky-600 to-blue-600 hover:from-sky-500 hover:to-blue-500 text-white font-semibold py-2 px-6 rounded-xl transition-all shadow-[0_0_20px_rgba(14,165,233,0.2)] hover:shadow-[0_0_30px_rgba(14,165,233,0.4)] flex items-center gap-2 h-[54px]"
+          >
+            <svg
+              class="w-5 h-5"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"
+              ></path>
+            </svg>
+            <span>Export Sequence (.ZIP)</span>
+          </button>
+        </div>
+      </header>
+
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 h-[calc(100vh-140px)]">
+        <div class="lg:col-span-8 flex flex-col gap-4 h-full">
+          <div
+            class="bg-zinc-900 border border-zinc-800 rounded-xl p-1 flex flex-col relative group flex-grow"
+          >
+            <div
+              class="absolute top-4 left-4 right-4 flex justify-between items-start z-10 pointer-events-none"
+            >
+              <div class="flex items-center gap-2 pointer-events-auto">
+                <div
+                  class="flex gap-1 text-xs bg-zinc-950/90 backdrop-blur p-1 rounded-lg border border-zinc-700/50 shadow-lg"
+                >
+                  <button
+                    id="bgTransparent"
+                    class="px-3 py-1.5 rounded bg-zinc-700 text-white shadow-sm transition"
+                  >
+                    Grid
+                  </button>
+                  <button
+                    id="bgGreen"
+                    class="px-3 py-1.5 rounded text-zinc-400 hover:text-white hover:bg-zinc-800 transition"
+                  >
+                    Green
+                  </button>
+                  <button
+                    id="bgImage"
+                    class="px-3 py-1.5 rounded text-zinc-400 hover:text-white hover:bg-zinc-800 transition flex gap-1 items-center"
+                  >
+                    <svg
+                      class="w-3 h-3"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
+                      ></path>
+                    </svg>
+                    Upload BG
+                  </button>
+                  <input
+                    type="file"
+                    id="fileInput"
+                    accept="image/*"
+                    class="hidden"
+                  />
+                </div>
+              </div>
+              <button
+                onclick="toggleFullscreen()"
+                class="pointer-events-auto p-2 bg-zinc-950/90 backdrop-blur border border-zinc-700/50 rounded-lg text-zinc-400 hover:text-white hover:border-sky-500 transition shadow-lg"
+                title="Fullscreen Preview"
+              >
+                <svg
+                  class="w-5 h-5"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"
+                  ></path>
+                </svg>
+              </button>
+            </div>
+
+            <div
+              id="canvasContainer"
+              class="relative w-full h-full rounded-lg overflow-hidden border border-zinc-800 bg-checker flex items-center justify-center shadow-inner"
+            >
+              <canvas
+                id="previewCanvas"
+                class="w-full h-full object-contain"
+              ></canvas>
+
+              <div
+                class="absolute bottom-4 left-4 right-4 bg-zinc-950/80 backdrop-blur border border-zinc-700 p-2 rounded-lg flex items-center gap-3 pointer-events-none"
+              >
+                <div
+                  class="text-[10px] text-zinc-400 font-mono w-12 text-right"
+                >
+                  TIME
+                </div>
+                <div
+                  class="flex-grow h-2 bg-zinc-800 rounded-full overflow-hidden relative"
+                >
+                  <div
+                    id="scrubber"
+                    class="absolute top-0 bottom-0 left-0 bg-sky-500 w-0"
+                  ></div>
+                </div>
+                <div
+                  id="totalTimeDisplay"
+                  class="text-[10px] text-zinc-400 font-mono w-12"
+                >
+                  0ms
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div
+            class="bg-zinc-900 border border-zinc-800 rounded-xl p-4 shrink-0 flex flex-col md:flex-row items-start md:items-center gap-4"
+          >
+            <div class="flex items-center gap-3">
+              <span
+                class="text-xs font-bold text-zinc-500 uppercase tracking-wider whitespace-nowrap"
+                >Template:</span
+              >
+              <select
+                id="presetGame"
+                class="bg-zinc-950 border border-zinc-700 rounded p-1.5 text-xs text-zinc-200 outline-none focus:border-sky-500 w-44"
+              >
+                <option value="preset1">Preset 01</option>
+                <option value="preset2">Preset 02</option>
+                <option value="preset3">Preset 03</option>
+              </select>
+            </div>
+            <div class="h-px w-full md:w-px md:h-6 bg-zinc-700"></div>
+            <div
+              class="flex items-center gap-2 overflow-x-auto pb-1 md:pb-0 w-full custom-scrollbar"
+            >
+              <button
+                onclick="applyPreset('body')"
+                class="px-4 py-1.5 bg-zinc-800 hover:bg-zinc-700 border border-zinc-700 rounded text-xs transition whitespace-nowrap"
+              >
+                Body Hit
+              </button>
+              <button
+                onclick="applyPreset('head')"
+                class="px-4 py-1.5 bg-zinc-800 hover:bg-yellow-900/30 border border-zinc-700 hover:border-yellow-600 rounded text-xs transition text-yellow-500 whitespace-nowrap"
+              >
+                Head Hit
+              </button>
+              <button
+                onclick="applyPreset('body_kill')"
+                class="px-4 py-1.5 bg-zinc-800 hover:bg-red-900/30 border border-zinc-700 hover:border-red-600 rounded text-xs transition text-red-400 whitespace-nowrap"
+              >
+                Body Kill
+              </button>
+              <button
+                onclick="applyPreset('head_kill')"
+                class="px-4 py-1.5 bg-zinc-800 hover:bg-red-900/30 border border-zinc-700 hover:border-red-600 rounded text-xs transition text-red-500 font-bold whitespace-nowrap shadow-[0_0_10px_rgba(239,68,68,0.1)]"
+              >
+                Head Kill
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div
+          class="lg:col-span-4 bg-zinc-900 border border-zinc-800 rounded-xl flex flex-col h-full overflow-hidden"
+        >
+          <div
+            class="p-4 border-b border-zinc-800 bg-zinc-900/50 flex justify-between items-center"
+          >
+            <h2
+              class="font-semibold text-sm uppercase tracking-wider text-zinc-400"
+            >
+              VFX & Sequence
+            </h2>
+          </div>
+
+          <div class="p-5 overflow-y-auto custom-scrollbar flex-grow space-y-8">
+            <div class="space-y-4">
+              <h3 class="text-xs font-bold text-sky-500 uppercase">
+                1. Visual Style
+              </h3>
+
+              <div class="grid grid-cols-3 gap-3">
+                <div class="col-span-3">
+                  <label class="text-xs text-zinc-400 block mb-1"
+                    >Hit Type Pattern</label
+                  >
+                  <select
+                    id="style"
+                    class="w-full bg-zinc-950 border border-zinc-700 rounded p-2 text-xs focus:border-sky-500 outline-none"
+                  >
+                    <option value="standard">Standard (Single Arm)</option>
+                    <option value="parallel">Double (Parallel Arms)</option>
+                    <option value="inner">Double (Inner Cross)</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label class="text-xs text-zinc-400 block mb-1">Shape</label>
+                  <select
+                    id="shape"
+                    class="w-full bg-zinc-950 border border-zinc-700 rounded p-2 text-xs focus:border-sky-500 outline-none"
+                  >
+                    <option value="line">Flat Line</option>
+                    <option value="tapered">Pointy</option>
+                    <option value="soft-taper">Soft Taper</option>
+                    <option value="diamond">Diamond</option>
+                    <option value="chevron">Chevron</option>
+                  </select>
+                </div>
+                <div>
+                  <label class="text-xs text-zinc-400 block mb-1"
+                    >Cap Style</label
+                  >
+                  <select
+                    id="cap"
+                    class="w-full bg-zinc-950 border border-zinc-700 rounded p-2 text-xs focus:border-sky-500 outline-none"
+                  >
+                    <option value="butt">Flat Cut</option>
+                    <option value="round">Rounded</option>
+                    <option value="diamond">Diamond Tip</option>
+                  </select>
+                </div>
+                <div>
+                  <label class="text-xs text-zinc-400 block mb-1"
+                    >Cap Position</label
+                  >
+                  <select
+                    id="capPosition"
+                    class="w-full bg-zinc-950 border border-zinc-700 rounded p-2 text-xs focus:border-sky-500 outline-none"
+                  >
+                    <option value="both">Both Ends</option>
+                    <option value="outer">Outer End</option>
+                    <option value="inner">Inner End</option>
+                  </select>
+                </div>
+
+                <div class="col-span-3">
+                  <label class="text-xs text-zinc-400 block mb-1"
+                    >Primary Color</label
+                  >
+                  <div class="flex gap-2">
+                    <input
+                      type="color"
+                      id="color"
+                      value="#ffffff"
+                      class="h-8 w-12 rounded bg-zinc-950 border border-zinc-700 p-0.5 cursor-pointer"
+                    />
+                    <input
+                      type="text"
+                      id="colorHex"
+                      value="#ffffff"
+                      class="flex-grow bg-zinc-950 border border-zinc-700 rounded px-2 text-xs uppercase font-mono"
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="h-px bg-zinc-800 w-full"></div>
+
+            <div class="space-y-4">
+              <h3 class="text-xs font-bold text-sky-500 uppercase">
+                2. Geometry Setup
+              </h3>
+
+              <div>
+                <div class="flex justify-between text-xs mb-1 text-zinc-400">
+                  <label>Line Thickness</label
+                  ><span id="valThickness" class="font-mono text-zinc-200"
+                    >4px</span
+                  >
+                </div>
+                <input type="range" id="thickness" min="1" max="40" value="4" />
+              </div>
+              <div>
+                <div class="flex justify-between text-xs mb-1 text-zinc-400">
+                  <label>Line Length</label
+                  ><span id="valLength" class="font-mono text-zinc-200"
+                    >25px</span
+                  >
+                </div>
+                <input type="range" id="length" min="5" max="150" value="25" />
+              </div>
+              <div>
+                <div class="flex justify-between text-xs mb-1 text-zinc-400">
+                  <label>Center Gap (Base)</label
+                  ><span id="valGap" class="font-mono text-zinc-200">15px</span>
+                </div>
+                <input type="range" id="gap" min="0" max="100" value="15" />
+              </div>
+              <div>
+                <div class="flex justify-between text-xs mb-1 text-zinc-400">
+                  <label>Cross Angle (Rotation)</label
+                  ><span id="valRotation" class="font-mono text-zinc-200"
+                    >45°</span
+                  >
+                </div>
+                <input type="range" id="rotation" min="0" max="90" value="45" />
+              </div>
+
+              <div
+                id="parallelControls"
+                class="hidden p-3 bg-zinc-950/50 rounded-lg border border-zinc-800 space-y-3"
+              >
+                <label class="text-xs font-bold text-zinc-500 block"
+                  >Parallel Alignment</label
+                >
+                <div>
+                  <div class="flex justify-between text-xs mb-1 text-zinc-400">
+                    <label>Distance Between</label
+                    ><span
+                      id="valParallelOffset"
+                      class="font-mono text-zinc-200"
+                      >6px</span
+                    >
+                  </div>
+                  <input
+                    type="range"
+                    id="parallelOffset"
+                    min="2"
+                    max="40"
+                    step="1"
+                    value="6"
+                  />
+                </div>
+              </div>
+
+              <div
+                id="innerControls"
+                class="hidden p-3 bg-zinc-950/50 rounded-lg border border-zinc-800 space-y-3"
+              >
+                <label class="text-xs font-bold text-zinc-500 block"
+                  >Inner Cross Setup</label
+                >
+
+                <div class="grid grid-cols-3 gap-3 mb-2">
+                  <div>
+                    <label class="text-xs text-zinc-400 block mb-1"
+                      >Inner Shape</label
+                    >
+                    <select
+                      id="innerShape"
+                      class="w-full bg-zinc-950 border border-zinc-700 rounded p-2 text-xs focus:border-sky-500 outline-none"
+                    >
+                      <option value="line">Flat Line</option>
+                      <option value="tapered">Pointy</option>
+                      <option value="soft-taper">Soft Taper</option>
+                      <option value="diamond">Diamond</option>
+                      <option value="chevron">Chevron</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label class="text-xs text-zinc-400 block mb-1"
+                      >Inner Cap</label
+                    >
+                    <select
+                      id="innerCap"
+                      class="w-full bg-zinc-950 border border-zinc-700 rounded p-2 text-xs focus:border-sky-500 outline-none"
+                    >
+                      <option value="butt">Flat Cut</option>
+                      <option value="round">Rounded</option>
+                      <option value="diamond">Diamond Tip</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label class="text-xs text-zinc-400 block mb-1"
+                      >Position</label
+                    >
+                    <select
+                      id="innerCapPosition"
+                      class="w-full bg-zinc-950 border border-zinc-700 rounded p-2 text-xs focus:border-sky-500 outline-none"
+                    >
+                      <option value="both">Both Ends</option>
+                      <option value="outer">Outer End</option>
+                      <option value="inner">Inner End</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div>
+                  <div class="flex justify-between text-xs mb-1 text-zinc-400">
+                    <label>Scale Multiplier</label
+                    ><span id="valInnerScale" class="font-mono text-zinc-200"
+                      >0.6x</span
+                    >
+                  </div>
+                  <input
+                    type="range"
+                    id="innerScale"
+                    min="0.1"
+                    max="1.5"
+                    step="0.1"
+                    value="0.6"
+                  />
+                </div>
+                <div>
+                  <div class="flex justify-between text-xs mb-1 text-zinc-400">
+                    <label>Gap Offset</label
+                    ><span id="valInnerOffset" class="font-mono text-zinc-200"
+                      >-5px</span
+                    >
+                  </div>
+                  <input
+                    type="range"
+                    id="innerOffset"
+                    min="-50"
+                    max="50"
+                    value="-5"
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div class="h-px bg-zinc-800 w-full"></div>
+
+            <div class="space-y-4">
+              <div class="flex items-center justify-between">
+                <h3 class="text-xs font-bold text-sky-500 uppercase">
+                  3. Timeline & Sequences
+                </h3>
+                <span
+                  class="text-[10px] bg-sky-500/10 text-sky-400 px-2 py-0.5 rounded border border-sky-500/20"
+                  >Pro UX</span
+                >
+              </div>
+
+              <div class="track-panel rounded-lg p-3 space-y-3">
+                <div
+                  class="flex items-center justify-between border-b border-zinc-800/50 pb-2"
+                >
+                  <span
+                    class="text-xs font-bold text-zinc-200 flex items-center gap-2"
+                  >
+                    <svg class="w-4 h-4 text-sky-500" fill="currentColor">
+                      <path
+                        fill-rule="evenodd"
+                        d="M2.75 9a.75.75 0 0 1 .75.75v1.69l2.22-2.22a.75.75 0 0 1 1.06 1.06L4.56 12.5h1.69a.75.75 0 0 1 0 1.5h-3.5a.75.75 0 0 1-.75-.75v-3.5A.75.75 0 0 1 2.75 9ZM2.75 7a.75.75 0 0 0 .75-.75V4.56l2.22 2.22a.75.75 0 0 0 1.06-1.06L4.56 3.5h1.69a.75.75 0 0 0 0-1.5h-3.5a.75.75 0 0 0-.75.75v3.5c0 .414.336.75.75.75ZM13.25 9a.75.75 0 0 0-.75.75v1.69l-2.22-2.22a.75.75 0 1 0-1.06 1.06l2.22 2.22H9.75a.75.75 0 0 0 0 1.5h3.5a.75.75 0 0 0 .75-.75v-3.5a.75.75 0 0 0-.75-.75ZM13.25 7a.75.75 0 0 1-.75-.75V4.56l-2.22 2.22a.75.75 0 1 1-1.06-1.06l2.22-2.22H9.75a.75.75 0 0 1 0-1.5h3.5a.75.75 0 0 1 .75.75v3.5a.75.75 0 0 1-.75.75Z"
+                        clip-rule="evenodd"
+                      />
+                    </svg>
+                    Track 1: Scale Pop
+                  </span>
+                </div>
+
+                <div class="grid grid-cols-2 gap-3">
+                  <div>
+                    <div
+                      class="flex justify-between text-[10px] mb-1 text-zinc-400"
+                    >
+                      <label>Initial Scale</label
+                      ><span id="valScaleStart" class="font-mono text-zinc-200"
+                        >1.5x</span
+                      >
+                    </div>
+                    <input
+                      type="range"
+                      id="scaleStart"
+                      min="0.1"
+                      max="3.0"
+                      step="0.1"
+                      value="1.5"
+                    />
+                  </div>
+                  <div>
+                    <label class="text-[10px] text-zinc-400 block mb-1"
+                      >Scale Easing</label
+                    >
+                    <select
+                      id="scaleEasing"
+                      class="w-full bg-zinc-900 border border-zinc-700 rounded px-2 py-1 text-xs outline-none focus:border-sky-500"
+                    >
+                      <option value="easeOutQuart" selected>
+                        Quart (Snappy)
+                      </option>
+                      <option value="easeOutExpo">Expo (Instant)</option>
+                      <option value="easeOutBack">Elastic (Bouncy)</option>
+                      <option value="heavyPop">Heavy Pop (Overshoot)</option>
+                      <option value="linear">Linear</option>
+                    </select>
+                  </div>
+                </div>
+                <div
+                  class="grid grid-cols-2 gap-3 bg-zinc-950/50 p-2 rounded border border-zinc-800"
+                >
+                  <div>
+                    <div
+                      class="flex justify-between text-[10px] mb-1 text-sky-400/80"
+                    >
+                      <label>Delay</label
+                      ><span id="valScaleDelay" class="font-mono">0ms</span>
+                    </div>
+                    <input
+                      type="range"
+                      id="scaleDelay"
+                      min="0"
+                      max="1000"
+                      step="10"
+                      value="0"
+                    />
+                  </div>
+                  <div>
+                    <div
+                      class="flex justify-between text-[10px] mb-1 text-emerald-400/80"
+                    >
+                      <label>Duration</label
+                      ><span id="valScaleDuration" class="font-mono"
+                        >150ms</span
+                      >
+                    </div>
+                    <input
+                      type="range"
+                      id="scaleDuration"
+                      min="10"
+                      max="1000"
+                      step="10"
+                      value="150"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <div
+                class="track-panel rounded-lg p-3 space-y-3"
+                style="border-color: #a855f7"
+              >
+                <div
+                  class="flex items-center justify-between border-b border-zinc-800/50 pb-2"
+                >
+                  <span
+                    class="text-xs font-bold text-zinc-200 flex items-center gap-2"
+                  >
+                    <svg
+                      class="w-4 h-4 text-purple-500"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"
+                      ></path>
+                    </svg>
+                    Track 2: Gap Travel
+                  </span>
+                </div>
+
+                <div class="grid grid-cols-2 gap-3">
+                  <div>
+                    <label class="text-[10px] text-zinc-400 block mb-1"
+                      >Direction</label
+                    >
+                    <select
+                      id="travelDirection"
+                      class="w-full bg-zinc-900 border border-zinc-700 rounded px-2 py-1 text-xs outline-none focus:border-purple-500"
+                    >
+                      <option value="outward">Pop Outward</option>
+                      <option value="inward">Snap Inward</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label class="text-[10px] text-zinc-400 block mb-1"
+                      >Travel Easing</label
+                    >
+                    <select
+                      id="travelEasing"
+                      class="w-full bg-zinc-900 border border-zinc-700 rounded px-2 py-1 text-xs outline-none focus:border-purple-500"
+                    >
+                      <option value="easeOutCubic">Cubic (Standard)</option>
+                      <option value="easeOutQuart" selected>
+                        Quart (Snappy)
+                      </option>
+                      <option value="easeOutExpo">Expo (Instant)</option>
+                      <option value="heavyPop">Heavy Pop (Overshoot)</option>
+                      <option value="spring">Spring (Wobbly)</option>
+                    </select>
+                  </div>
+                </div>
+
+                <canvas
+                  id="travelGraph"
+                  class="w-full h-12 bg-[#111318] rounded border border-zinc-800"
+                ></canvas>
+
+                <div>
+                  <div
+                    class="flex justify-between text-[10px] mb-1 text-zinc-400"
+                  >
+                    <label>Travel Distance</label
+                    ><span
+                      id="valTravelDistance"
+                      class="font-mono text-zinc-200"
+                      >10px</span
+                    >
+                  </div>
+                  <input
+                    type="range"
+                    id="travelDistance"
+                    min="0"
+                    max="200"
+                    value="10"
+                  />
+                </div>
+                <div
+                  class="grid grid-cols-2 gap-3 bg-zinc-950/50 p-2 rounded border border-zinc-800"
+                >
+                  <div>
+                    <div
+                      class="flex justify-between text-[10px] mb-1 text-sky-400/80"
+                    >
+                      <label>Delay</label
+                      ><span id="valTravelDelay" class="font-mono">100ms</span>
+                    </div>
+                    <input
+                      type="range"
+                      id="travelDelay"
+                      min="0"
+                      max="1000"
+                      step="10"
+                      value="100"
+                    />
+                  </div>
+                  <div>
+                    <div
+                      class="flex justify-between text-[10px] mb-1 text-emerald-400/80"
+                    >
+                      <label>Duration</label
+                      ><span id="valTravelDuration" class="font-mono"
+                        >200ms</span
+                      >
+                    </div>
+                    <input
+                      type="range"
+                      id="travelDuration"
+                      min="10"
+                      max="1000"
+                      step="10"
+                      value="200"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <div
+                class="track-panel rounded-lg p-3 space-y-3"
+                style="border-color: #22c55e"
+              >
+                <div
+                  class="flex items-center justify-between border-b border-zinc-800/50 pb-2"
+                >
+                  <span
+                    class="text-xs font-bold text-zinc-200 flex items-center gap-2"
+                  >
+                    <svg
+                      class="w-4 h-4 text-emerald-500"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M20.618 5.984A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016zM12 9v2m0 4h.01"
+                      ></path>
+                    </svg>
+                    Track 3: Fade Out
+                  </span>
+                </div>
+
+                <div class="flex items-center justify-between">
+                  <label class="text-[10px] font-bold text-zinc-400"
+                    >Enable Fade Out</label
+                  >
+                  <input
+                    type="checkbox"
+                    id="fadeToggle"
+                    checked
+                    class="w-4 h-4 rounded border-zinc-700 bg-zinc-900 text-sky-500 focus:ring-sky-500"
+                  />
+                </div>
+
+                <div id="fadeEasingContainer" class="space-y-2">
+                  <div>
+                    <label class="text-[10px] text-zinc-400 block mb-1"
+                      >Fade Curve</label
+                    >
+                    <select
+                      id="fadeEasing"
+                      class="w-full bg-zinc-900 border border-zinc-700 rounded px-2 py-1 text-xs outline-none focus:border-emerald-500"
+                    >
+                      <option value="linear">Linear (Smooth Fade)</option>
+                      <option value="easeIn">
+                        Ease In (Accelerating Fade)
+                      </option>
+                      <option value="easeOut">
+                        Ease Out (Decelerating Fade)
+                      </option>
+                      <option value="lateFade">Hold then Fade</option>
+                      <option value="delayedCut" selected>
+                        Long Hold, Fast Fade
+                      </option>
+                      <option value="sharpCut">Sharp Cut (Steps)</option>
+                    </select>
+                  </div>
+                  <canvas
+                    id="fadeGraph"
+                    class="w-full h-10 bg-[#111318] rounded border border-zinc-800"
+                  ></canvas>
+
+                  <div
+                    class="grid grid-cols-2 gap-3 bg-zinc-950/50 p-2 rounded border border-zinc-800 mt-2"
+                  >
+                    <div>
+                      <div
+                        class="flex justify-between text-[10px] mb-1 text-sky-400/80"
+                      >
+                        <label>Delay</label
+                        ><span id="valFadeDelay" class="font-mono">200ms</span>
+                      </div>
+                      <input
+                        type="range"
+                        id="fadeDelay"
+                        min="0"
+                        max="2000"
+                        step="10"
+                        value="200"
+                      />
+                    </div>
+                    <div>
+                      <div
+                        class="flex justify-between text-[10px] mb-1 text-emerald-400/80"
+                      >
+                        <label>Duration</label
+                        ><span id="valFadeDuration" class="font-mono"
+                          >150ms</span
+                        >
+                      </div>
+                      <input
+                        type="range"
+                        id="fadeDuration"
+                        min="10"
+                        max="1500"
+                        step="10"
+                        value="150"
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      // --- Easing Math ---
+      const easings = {
+        linear: (t) => t,
+        easeOutSine: (t) => Math.sin((t * Math.PI) / 2),
+        easeOutCubic: (t) => 1 - Math.pow(1 - t, 3),
+        easeOutQuart: (t) => 1 - Math.pow(1 - t, 4),
+        easeOutExpo: (t) => (t === 1 ? 1 : 1 - Math.pow(2, -10 * t)),
+        easeOutBack: (t) => {
+          const c1 = 1.70158;
+          const c3 = c1 + 1;
+          return 1 + c3 * Math.pow(t - 1, 3) + c1 * Math.pow(t - 1, 2);
+        },
+        spring: (t) => 1 - Math.cos(t * 4.5 * Math.PI) * Math.exp(-t * 6),
+        heavyPop: (t) => {
+          const c1 = 3.5;
+          const c3 = c1 + 1;
+          return 1 + c3 * Math.pow(t - 1, 3) + c1 * Math.pow(t - 1, 2);
+        },
+      };
+
+      const fadeEasings = {
+        linear: (t) => t,
+        easeIn: (t) => t * t,
+        easeOut: (t) => 1 - (1 - t) * (1 - t),
+        lateFade: (t) => (t < 0.5 ? 0 : (t - 0.5) * 2),
+        delayedCut: (t) => (t < 0.8 ? 0 : (t - 0.8) * 5),
+        sharpCut: (t) => Math.floor(t * 4) / 4,
+      };
+
+      // --- Configuration & Sequencer State ---
+      const config = {
+        style: "standard",
+        shape: "line",
+        cap: "butt",
+        capPosition: "both",
+        innerShape: "line",
+        innerCap: "butt",
+        innerCapPosition: "both",
+        color: "#ffffff",
+        thickness: 4,
+        length: 25,
+        gap: 15,
+        rotation: 45,
+        parallelOffset: 6,
+        innerScale: 0.6,
+        innerOffset: -5,
+
+        // SEQUENCER CHANNELS
+        scaleStart: 1.5,
+        scaleEasing: "easeOutQuart",
+        scaleDelay: 0,
+        scaleDuration: 150,
+        travelDirection: "outward",
+        travelDistance: 10,
+        travelEasing: "easeOutQuart",
+        travelDelay: 100,
+        travelDuration: 200,
+        fade: true,
+        fadeEasing: "linear",
+        fadeDelay: 200,
+        fadeDuration: 150,
+
+        background: "transparent",
+        bgImage: null,
+      };
+
+      const gamePresets = {
+        preset1: {
+          body: {
+            style: "standard",
+            shape: "soft-taper",
+            cap: "butt",
+            capPosition: "both",
+            innerShape: "line",
+            innerCap: "butt",
+            innerCapPosition: "both",
+            color: "#ffffff",
+            thickness: 3,
+            length: 18,
+            gap: 12,
+            parallelOffset: 6,
+            innerScale: 0.6,
+            innerOffset: -5,
+            scaleStart: 1.5,
+            scaleEasing: "easeOutQuart",
+            scaleDelay: 0,
+            scaleDuration: 100,
+            travelDirection: "outward",
+            travelDistance: 4,
+            travelEasing: "easeOutQuart",
+            travelDelay: 100,
+            travelDuration: 100,
+            fade: true,
+            fadeEasing: "linear",
+            fadeDelay: 200,
+            fadeDuration: 150,
+          },
+          head: {
+            style: "inner",
+            shape: "soft-taper",
+            cap: "butt",
+            capPosition: "both",
+            innerShape: "soft-taper",
+            innerCap: "butt",
+            innerCapPosition: "both",
+            color: "#facc15",
+            thickness: 3,
+            length: 18,
+            gap: 12,
+            parallelOffset: 7,
+            innerScale: 0.6,
+            innerOffset: 20,
+            scaleStart: 1.8,
+            scaleEasing: "easeOutQuart",
+            scaleDelay: 0,
+            scaleDuration: 120,
+            travelDirection: "outward",
+            travelDistance: 6,
+            travelEasing: "easeOutQuart",
+            travelDelay: 120,
+            travelDuration: 120,
+            fade: true,
+            fadeEasing: "linear",
+            fadeDelay: 250,
+            fadeDuration: 150,
+          },
+          body_kill: {
+            style: "standard",
+            shape: "soft-taper",
+            cap: "round",
+            capPosition: "both",
+            innerShape: "line",
+            innerCap: "butt",
+            innerCapPosition: "both",
+            color: "#dc0000",
+            thickness: 4,
+            length: 24,
+            gap: 10,
+            parallelOffset: 6,
+            innerScale: 0.6,
+            innerOffset: -5,
+            scaleStart: 2.0,
+            scaleEasing: "easeOutExpo",
+            scaleDelay: 0,
+            scaleDuration: 150,
+            travelDirection: "outward",
+            travelDistance: 8,
+            travelEasing: "easeOutExpo",
+            travelDelay: 150,
+            travelDuration: 150,
+            fade: true,
+            fadeEasing: "easeIn",
+            fadeDelay: 350,
+            fadeDuration: 200,
+          },
+          head_kill: {
+            style: "inner",
+            shape: "soft-taper",
+            cap: "butt",
+            capPosition: "both",
+            innerShape: "soft-taper",
+            innerCap: "butt",
+            innerCapPosition: "both",
+            color: "#dc0000",
+            thickness: 4,
+            length: 24,
+            gap: 10,
+            parallelOffset: 9,
+            innerScale: 0.6,
+            innerOffset: 30,
+            scaleStart: 2.5,
+            scaleEasing: "easeOutExpo",
+            scaleDelay: 0,
+            scaleDuration: 150,
+            travelDirection: "outward",
+            travelDistance: 12,
+            travelEasing: "easeOutExpo",
+            travelDelay: 150,
+            travelDuration: 200,
+            fade: true,
+            fadeEasing: "easeIn",
+            fadeDelay: 400,
+            fadeDuration: 250,
+          },
+        },
+        preset2: {
+          body: {
+            style: "standard",
+            shape: "tapered",
+            cap: "butt",
+            capPosition: "both",
+            innerShape: "line",
+            innerCap: "butt",
+            innerCapPosition: "both",
+            color: "#ffffff",
+            thickness: 5,
+            length: 14,
+            gap: 14,
+            parallelOffset: 6,
+            innerScale: 0.6,
+            innerOffset: -5,
+            scaleStart: 1.2,
+            scaleEasing: "easeOutExpo",
+            scaleDelay: 0,
+            scaleDuration: 80,
+            travelDirection: "outward",
+            travelDistance: 6,
+            travelEasing: "easeOutQuart",
+            travelDelay: 80,
+            travelDuration: 150,
+            fade: true,
+            fadeEasing: "easeOut",
+            fadeDelay: 150,
+            fadeDuration: 100,
+          },
+          head: {
+            style: "parallel",
+            shape: "soft-taper",
+            cap: "butt",
+            capPosition: "both",
+            innerShape: "line",
+            innerCap: "butt",
+            innerCapPosition: "both",
+            color: "#a855f7",
+            thickness: 4,
+            length: 16,
+            gap: 16,
+            parallelOffset: 10,
+            innerScale: 0.6,
+            innerOffset: -5,
+            scaleStart: 1.4,
+            scaleEasing: "easeOutExpo",
+            scaleDelay: 0,
+            scaleDuration: 100,
+            travelDirection: "outward",
+            travelDistance: 8,
+            travelEasing: "easeOutQuart",
+            travelDelay: 100,
+            travelDuration: 150,
+            fade: true,
+            fadeEasing: "easeOut",
+            fadeDelay: 200,
+            fadeDuration: 150,
+          },
+          body_kill: {
+            style: "standard",
+            shape: "soft-taper",
+            cap: "butt",
+            capPosition: "both",
+            innerShape: "line",
+            innerCap: "butt",
+            innerCapPosition: "both",
+            color: "#ef4444",
+            thickness: 8,
+            length: 20,
+            gap: 12,
+            parallelOffset: 6,
+            innerScale: 0.6,
+            innerOffset: -5,
+            scaleStart: 1.5,
+            scaleEasing: "easeOutBack",
+            scaleDelay: 0,
+            scaleDuration: 150,
+            travelDirection: "outward",
+            travelDistance: 15,
+            travelEasing: "heavyPop",
+            travelDelay: 100,
+            travelDuration: 200,
+            fade: true,
+            fadeEasing: "easeIn",
+            fadeDelay: 300,
+            fadeDuration: 200,
+          },
+          head_kill: {
+            style: "parallel",
+            shape: "tapered",
+            cap: "butt",
+            capPosition: "both",
+            innerShape: "line",
+            innerCap: "butt",
+            innerCapPosition: "both",
+            color: "#ef4444",
+            thickness: 7,
+            length: 25,
+            gap: 12,
+            parallelOffset: 14,
+            innerScale: 0.6,
+            innerOffset: -5,
+            scaleStart: 1.8,
+            scaleEasing: "easeOutBack",
+            scaleDelay: 0,
+            scaleDuration: 150,
+            travelDirection: "outward",
+            travelDistance: 20,
+            travelEasing: "heavyPop",
+            travelDelay: 120,
+            travelDuration: 250,
+            fade: true,
+            fadeEasing: "easeIn",
+            fadeDelay: 350,
+            fadeDuration: 200,
+          },
+        },
+        preset3: {
+          body: {
+            style: "standard",
+            shape: "line",
+            cap: "round",
+            capPosition: "both",
+            innerShape: "line",
+            innerCap: "round",
+            innerCapPosition: "both",
+            color: "#ffffff",
+            thickness: 2,
+            length: 18,
+            gap: 30,
+            parallelOffset: 6,
+            innerScale: 0.6,
+            innerOffset: -5,
+            scaleStart: 1.0,
+            scaleEasing: "linear",
+            scaleDelay: 0,
+            scaleDuration: 10,
+            travelDirection: "inward",
+            travelDistance: 20,
+            travelEasing: "easeOutExpo",
+            travelDelay: 0,
+            travelDuration: 100,
+            fade: true,
+            fadeEasing: "linear",
+            fadeDelay: 150,
+            fadeDuration: 100,
+          },
+          head: {
+            style: "inner",
+            shape: "line",
+            cap: "round",
+            capPosition: "both",
+            innerShape: "line",
+            innerCap: "round",
+            innerCapPosition: "both",
+            color: "#ef4444",
+            thickness: 2,
+            length: 22,
+            gap: 35,
+            parallelOffset: 8,
+            innerScale: 0.5,
+            innerOffset: -12,
+            scaleStart: 1.0,
+            scaleEasing: "linear",
+            scaleDelay: 0,
+            scaleDuration: 10,
+            travelDirection: "inward",
+            travelDistance: 25,
+            travelEasing: "easeOutExpo",
+            travelDelay: 0,
+            travelDuration: 120,
+            fade: true,
+            fadeEasing: "linear",
+            fadeDelay: 200,
+            fadeDuration: 120,
+          },
+          body_kill: {
+            style: "standard",
+            shape: "line",
+            cap: "diamond",
+            capPosition: "outer",
+            innerShape: "line",
+            innerCap: "diamond",
+            innerCapPosition: "outer",
+            color: "#ef4444",
+            thickness: 4,
+            length: 24,
+            gap: 35,
+            parallelOffset: 6,
+            innerScale: 0.6,
+            innerOffset: -5,
+            scaleStart: 1.0,
+            scaleEasing: "linear",
+            scaleDelay: 0,
+            scaleDuration: 10,
+            travelDirection: "inward",
+            travelDistance: 25,
+            travelEasing: "easeOutExpo",
+            travelDelay: 0,
+            travelDuration: 150,
+            fade: true,
+            fadeEasing: "linear",
+            fadeDelay: 250,
+            fadeDuration: 150,
+          },
+          head_kill: {
+            style: "inner",
+            shape: "line",
+            cap: "diamond",
+            capPosition: "outer",
+            innerShape: "diamond",
+            innerCap: "butt",
+            innerCapPosition: "outer",
+            color: "#ef4444",
+            thickness: 4,
+            length: 28,
+            gap: 40,
+            parallelOffset: 10,
+            innerScale: 1.0,
+            innerOffset: -15,
+            scaleStart: 1.0,
+            scaleEasing: "linear",
+            scaleDelay: 0,
+            scaleDuration: 10,
+            travelDirection: "inward",
+            travelDistance: 30,
+            travelEasing: "easeOutExpo",
+            travelDelay: 0,
+            travelDuration: 180,
+            fade: true,
+            fadeEasing: "linear",
+            fadeDelay: 300,
+            fadeDuration: 200,
+          },
+        },
+      };
+
+      // --- DOM Elements ---
+      const canvas = document.getElementById("previewCanvas");
+      const ctx = canvas.getContext("2d");
+      const exportBtn = document.getElementById("exportBtn");
+      const fileInput = document.getElementById("fileInput");
+      const scrubber = document.getElementById("scrubber");
+      const totalTimeDisplay = document.getElementById("totalTimeDisplay");
+
+      // Inputs mapping
+      const inputs = {
+        style: document.getElementById("style"),
+        shape: document.getElementById("shape"),
+        cap: document.getElementById("cap"),
+        capPosition: document.getElementById("capPosition"),
+        innerShape: document.getElementById("innerShape"),
+        innerCap: document.getElementById("innerCap"),
+        innerCapPosition: document.getElementById("innerCapPosition"),
+        color: document.getElementById("color"),
+        colorHex: document.getElementById("colorHex"),
+        thickness: document.getElementById("thickness"),
+        length: document.getElementById("length"),
+        gap: document.getElementById("gap"),
+        rotation: document.getElementById("rotation"),
+        parallelOffset: document.getElementById("parallelOffset"),
+        innerScale: document.getElementById("innerScale"),
+        innerOffset: document.getElementById("innerOffset"),
+
+        scaleStart: document.getElementById("scaleStart"),
+        scaleEasing: document.getElementById("scaleEasing"),
+        scaleDelay: document.getElementById("scaleDelay"),
+        scaleDuration: document.getElementById("scaleDuration"),
+
+        travelDirection: document.getElementById("travelDirection"),
+        travelDistance: document.getElementById("travelDistance"),
+        travelEasing: document.getElementById("travelEasing"),
+        travelDelay: document.getElementById("travelDelay"),
+        travelDuration: document.getElementById("travelDuration"),
+
+        fade: document.getElementById("fadeToggle"),
+        fadeEasing: document.getElementById("fadeEasing"),
+        fadeDelay: document.getElementById("fadeDelay"),
+        fadeDuration: document.getElementById("fadeDuration"),
+      };
+
+      const displays = {
+        thickness: document.getElementById("valThickness"),
+        length: document.getElementById("valLength"),
+        gap: document.getElementById("valGap"),
+        rotation: document.getElementById("valRotation"),
+        parallelOffset: document.getElementById("valParallelOffset"),
+        innerScale: document.getElementById("valInnerScale"),
+        innerOffset: document.getElementById("valInnerOffset"),
+
+        scaleStart: document.getElementById("valScaleStart"),
+        scaleDelay: document.getElementById("valScaleDelay"),
+        scaleDuration: document.getElementById("valScaleDuration"),
+
+        travelDistance: document.getElementById("valTravelDistance"),
+        travelDelay: document.getElementById("valTravelDelay"),
+        travelDuration: document.getElementById("valTravelDuration"),
+
+        fadeDelay: document.getElementById("valFadeDelay"),
+        fadeDuration: document.getElementById("valFadeDuration"),
+      };
+
+      // --- Initialization ---
+      function init() {
+        canvas.width = 1920;
+        canvas.height = 1080;
+
+        Object.keys(inputs).forEach((key) => {
+          const input = inputs[key];
+          if (input && input.type === "checkbox") {
+            input.addEventListener("change", updateConfigFromUI);
+          } else if (input) {
+            input.addEventListener("input", updateConfigFromUI);
+          }
+        });
+
+        inputs.color.addEventListener(
+          "input",
+          () => (inputs.colorHex.value = inputs.color.value),
+        );
+        inputs.colorHex.addEventListener("input", () => {
+          if (/^#[0-9A-F]{6}$/i.test(inputs.colorHex.value)) {
+            inputs.color.value = inputs.colorHex.value;
+            updateConfigFromUI();
+          }
+        });
+
+        document
+          .getElementById("bgTransparent")
+          .addEventListener("click", () => setBackground("transparent"));
+        document
+          .getElementById("bgGreen")
+          .addEventListener("click", () => setBackground("green"));
+        document
+          .getElementById("bgImage")
+          .addEventListener("click", () => fileInput.click());
+
+        fileInput.addEventListener("change", handleImageUpload);
+
+        applyPreset("body");
+        requestAnimationFrame(loop);
+      }
+
+      function calculateMaxTime() {
+        const scaleEnd = config.scaleDelay + config.scaleDuration;
+        const travelEnd = config.travelDelay + config.travelDuration;
+        const fadeEnd = config.fade
+          ? config.fadeDelay + config.fadeDuration
+          : 0;
+        return Math.max(scaleEnd, travelEnd, fadeEnd);
+      }
+
+      // --- Core Logic ---
+
+      function updateConfigFromUI() {
+        config.style = inputs.style.value;
+        config.shape = inputs.shape.value;
+        config.cap = inputs.cap.value;
+        config.capPosition = inputs.capPosition.value;
+        config.innerShape = inputs.innerShape.value;
+        config.innerCap = inputs.innerCap.value;
+        config.innerCapPosition = inputs.innerCapPosition.value;
+        config.color = inputs.color.value;
+        config.thickness = parseInt(inputs.thickness.value);
+        config.length = parseInt(inputs.length.value);
+        config.gap = parseInt(inputs.gap.value);
+        config.rotation = parseInt(inputs.rotation.value);
+        config.parallelOffset = parseInt(inputs.parallelOffset.value);
+        config.innerScale = parseFloat(inputs.innerScale.value);
+        config.innerOffset = parseInt(inputs.innerOffset.value);
+
+        config.scaleStart = parseFloat(inputs.scaleStart.value);
+        config.scaleEasing = inputs.scaleEasing.value;
+        config.scaleDelay = parseInt(inputs.scaleDelay.value);
+        config.scaleDuration = parseInt(inputs.scaleDuration.value);
+
+        config.travelDirection = inputs.travelDirection.value;
+        config.travelDistance = parseInt(inputs.travelDistance.value);
+        config.travelEasing = inputs.travelEasing.value;
+        config.travelDelay = parseInt(inputs.travelDelay.value);
+        config.travelDuration = parseInt(inputs.travelDuration.value);
+
+        config.fade = inputs.fade.checked;
+        config.fadeEasing = inputs.fadeEasing.value;
+        config.fadeDelay = parseInt(inputs.fadeDelay.value);
+        config.fadeDuration = parseInt(inputs.fadeDuration.value);
+
+        displays.thickness.innerText = config.thickness + "px";
+        displays.length.innerText = config.length + "px";
+        displays.gap.innerText = config.gap + "px";
+        displays.rotation.innerText = config.rotation + "°";
+        displays.parallelOffset.innerText = config.parallelOffset + "px";
+        displays.innerScale.innerText = config.innerScale.toFixed(1) + "x";
+        displays.innerOffset.innerText = config.innerOffset + "px";
+
+        displays.scaleStart.innerText = config.scaleStart.toFixed(1) + "x";
+        displays.scaleDelay.innerText = config.scaleDelay + "ms";
+        displays.scaleDuration.innerText = config.scaleDuration + "ms";
+
+        displays.travelDistance.innerText = config.travelDistance + "px";
+        displays.travelDelay.innerText = config.travelDelay + "ms";
+        displays.travelDuration.innerText = config.travelDuration + "ms";
+
+        displays.fadeDelay.innerText = config.fadeDelay + "ms";
+        displays.fadeDuration.innerText = config.fadeDuration + "ms";
+
+        document
+          .getElementById("parallelControls")
+          .classList.toggle("hidden", config.style !== "parallel");
+        document
+          .getElementById("innerControls")
+          .classList.toggle("hidden", config.style !== "inner");
+        document
+          .getElementById("fadeEasingContainer")
+          .classList.toggle("hidden", !config.fade);
+
+        // Disabled state assignments removed so custom caps can apply to all shapes!
+
+        drawGraph(
+          document.getElementById("travelGraph"),
+          easings[config.travelEasing],
+          "#a855f7",
+        );
+        drawGraph(
+          document.getElementById("fadeGraph"),
+          fadeEasings[config.fadeEasing],
+          "#22c55e",
+          true,
+        );
+
+        totalTimeDisplay.innerText = calculateMaxTime() + "ms";
+      }
+
+      function drawGraph(canvas, easeFn, color, isFade = false) {
+        canvas.width = canvas.clientWidth * 2;
+        canvas.height = canvas.clientHeight * 2;
+        const c = canvas.getContext("2d");
+        const w = canvas.width;
+        const h = canvas.height;
+
+        c.clearRect(0, 0, w, h);
+
+        c.strokeStyle = "#27272a";
+        c.lineWidth = 2;
+        c.beginPath();
+        if (isFade) {
+          c.moveTo(0, h - 10);
+          c.lineTo(w, h - 10);
+        } else {
+          c.moveTo(0, h / 2);
+          c.lineTo(w, h / 2);
+        }
+        c.stroke();
+
+        c.strokeStyle = color;
+        c.lineWidth = 4;
+        c.lineJoin = "round";
+        c.beginPath();
+
+        const padding = isFade ? 10 : 20;
+        const trackHeight = h - padding * 2;
+
+        for (let i = 0; i <= w; i++) {
+          let t = i / w;
+          let val = easeFn(t);
+          let y = h - padding - val * trackHeight;
+          if (i === 0) c.moveTo(i, y);
+          else c.lineTo(i, y);
+        }
+        c.stroke();
+      }
+
+      function setBackground(type) {
+        config.background = type;
+        const container = document.getElementById("canvasContainer");
+        if (type === "transparent") {
+          container.style.backgroundColor = "";
+          container.classList.add("bg-checker");
+        } else if (type === "green") {
+          container.classList.remove("bg-checker");
+          container.style.backgroundColor = "#00ff00";
+        }
+      }
+
+      function handleImageUpload(e) {
+        const file = e.target.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = function (event) {
+          const img = new Image();
+          img.onload = function () {
+            config.bgImage = img;
+            config.background = "image";
+            document
+              .getElementById("canvasContainer")
+              .classList.remove("bg-checker");
+          };
+          img.src = event.target.result;
+        };
+        reader.readAsDataURL(file);
+      }
+
+      function applyPreset(type) {
+        const game = document.getElementById("presetGame").value;
+        const p = gamePresets[game][type];
+        if (!p) return;
+
+        Object.keys(p).forEach((k) => {
+          if (inputs[k]) {
+            if (inputs[k].type === "checkbox") inputs[k].checked = p[k];
+            else inputs[k].value = p[k];
+          }
+        });
+        inputs.colorHex.value = p.color;
+
+        updateConfigFromUI();
+        animTime = 0;
+      }
+
+      function toggleFullscreen() {
+        const container = document.getElementById("canvasContainer");
+        if (!document.fullscreenElement) {
+          if (container.requestFullscreen) container.requestFullscreen();
+        } else {
+          if (document.exitFullscreen) document.exitFullscreen();
+        }
+      }
+
+      // --- Render ---
+
+      function drawArmPath(
+        ctx,
+        gap,
+        len,
+        thickness,
+        currentShape,
+        currentCap,
+        currentCapPos,
+      ) {
+        const hasInner = currentCapPos === "inner" || currentCapPos === "both";
+        const hasOuter = currentCapPos === "outer" || currentCapPos === "both";
+
+        ctx.beginPath();
+
+        // 1. DRAW INNER EDGE
+        if (hasInner) {
+          if (currentCap === "round") {
+            ctx.arc(gap, 0, thickness / 2, Math.PI / 2, -Math.PI / 2, false);
+          } else if (currentCap === "diamond") {
+            ctx.moveTo(gap, thickness / 2);
+            ctx.lineTo(gap - thickness / 2, 0);
+            ctx.lineTo(gap, -thickness / 2);
+          } else {
+            ctx.moveTo(gap, thickness / 2);
+            ctx.lineTo(gap, -thickness / 2);
+          }
+        } else {
+          // If shape has an inherent inner profile, draw it
+          if (currentShape === "chevron") {
+            ctx.moveTo(gap, thickness / 2);
+            ctx.lineTo(gap + len / 2, 0);
+            ctx.lineTo(gap, -thickness / 2);
+          } else if (currentShape === "diamond") {
+            ctx.moveTo(gap + len / 2, thickness / 2);
+            ctx.lineTo(gap, 0);
+            ctx.lineTo(gap + len / 2, -thickness / 2);
+          } else {
+            ctx.moveTo(gap, thickness / 2);
+            ctx.lineTo(gap, -thickness / 2);
+          }
+        }
+
+        // 2. DRAW OUTER EDGE
+        if (currentShape === "tapered") {
+          ctx.lineTo(gap + len, 0);
+        } else if (currentShape === "soft-taper") {
+          const tipRadius = Math.max(0.5, thickness * 0.3);
+          ctx.lineTo(gap + len - tipRadius, -tipRadius);
+          ctx.arc(
+            gap + len - tipRadius,
+            0,
+            tipRadius,
+            -Math.PI / 2,
+            Math.PI / 2,
+            false,
+          );
+        } else if (currentShape === "diamond") {
+          ctx.lineTo(gap + len, 0);
+          ctx.lineTo(gap + len / 2, thickness / 2);
+        } else if (currentShape === "chevron") {
+          ctx.lineTo(gap + thickness, -thickness / 2);
+          ctx.lineTo(gap + len / 2 + thickness, 0);
+          ctx.lineTo(gap + thickness, thickness / 2);
+        } else {
+          // 'line' uses standard outer cap logic
+          ctx.lineTo(gap + len, -thickness / 2);
+
+          if (hasOuter) {
+            if (currentCap === "round") {
+              ctx.arc(
+                gap + len,
+                0,
+                thickness / 2,
+                -Math.PI / 2,
+                Math.PI / 2,
+                false,
+              );
+            } else if (currentCap === "diamond") {
+              ctx.lineTo(gap + len + thickness / 2, 0);
+              ctx.lineTo(gap + len, thickness / 2);
+            } else {
+              ctx.lineTo(gap + len, thickness / 2);
+            }
+          } else {
+            ctx.lineTo(gap + len, thickness / 2);
+          }
+        }
+
+        ctx.closePath();
+        ctx.fill();
+      }
+
+      function drawShape(
+        ctx,
+        gap,
+        len,
+        thickness,
+        angleRad,
+        color,
+        isMainPass = true,
+        shapeOverride = null,
+        capOverride = null,
+        capPosOverride = null,
+      ) {
+        const currentShape = shapeOverride || config.shape;
+        const currentCap = capOverride || config.cap;
+        const currentCapPos = capPosOverride || config.capPosition;
+
+        ctx.save();
+        ctx.rotate(angleRad);
+        ctx.fillStyle = color;
+
+        if (isMainPass && config.style === "parallel") {
+          const offsetHalved = config.parallelOffset / 2;
+          ctx.save();
+          ctx.translate(0, -offsetHalved);
+          drawArmPath(
+            ctx,
+            gap,
+            len,
+            thickness,
+            currentShape,
+            currentCap,
+            currentCapPos,
+          );
+          ctx.restore();
+          ctx.save();
+          ctx.translate(0, offsetHalved);
+          drawArmPath(
+            ctx,
+            gap,
+            len,
+            thickness,
+            currentShape,
+            currentCap,
+            currentCapPos,
+          );
+          ctx.restore();
+        } else {
+          drawArmPath(
+            ctx,
+            gap,
+            len,
+            thickness,
+            currentShape,
+            currentCap,
+            currentCapPos,
+          );
+        }
+
+        if (isMainPass && config.style === "inner") {
+          const innerGap = gap + config.innerOffset;
+          const innerLen = len * config.innerScale;
+          const innerThick = Math.max(1, thickness * config.innerScale);
+
+          drawShape(
+            ctx,
+            innerGap,
+            innerLen,
+            innerThick,
+            0,
+            color,
+            false,
+            config.innerShape,
+            config.innerCap,
+            config.innerCapPosition,
+          );
+        }
+
+        ctx.restore();
+      }
+
+      function renderFrame(context, w, h, time, isExporting) {
+        context.clearRect(0, 0, w, h);
+
+        if (!isExporting) {
+          if (config.background === "image" && config.bgImage) {
+            const img = config.bgImage;
+            const scale = Math.max(w / img.width, h / img.height);
+            const x = w / 2 - (img.width / 2) * scale;
+            const y = h / 2 - (img.height / 2) * scale;
+            context.drawImage(img, x, y, img.width * scale, img.height * scale);
+            context.fillStyle = "rgba(0,0,0,0.3)";
+            context.fillRect(0, 0, w, h);
+          } else if (config.background === "green") {
+            context.fillStyle = "#00FF00";
+            context.fillRect(0, 0, w, h);
+          }
+        } else {
+          if (config.background === "green") {
+            context.fillStyle = "#00FF00";
+            context.fillRect(0, 0, w, h);
+          }
+        }
+
+        let sProgress = 0;
+        if (config.scaleDuration > 0) {
+          sProgress = Math.min(
+            Math.max((time - config.scaleDelay) / config.scaleDuration, 0),
+            1,
+          );
+        } else if (time >= config.scaleDelay) {
+          sProgress = 1;
+        }
+        const scaleEaseVal = easings[config.scaleEasing](sProgress);
+        const dynamicScale =
+          config.scaleStart + (1.0 - config.scaleStart) * scaleEaseVal;
+
+        let tProgress = 0;
+        if (config.travelDuration > 0) {
+          tProgress = Math.min(
+            Math.max((time - config.travelDelay) / config.travelDuration, 0),
+            1,
+          );
+        } else if (time >= config.travelDelay) {
+          tProgress = 1;
+        }
+        const travelEaseVal = easings[config.travelEasing](tProgress);
+
+        let currentGap = config.gap;
+        if (config.travelDirection === "outward") {
+          currentGap += config.travelDistance * travelEaseVal;
+        } else {
+          currentGap =
+            config.gap +
+            config.travelDistance -
+            config.travelDistance * travelEaseVal;
+        }
+
+        let opacity = 1;
+        if (config.fade) {
+          let fProgress = 0;
+          if (config.fadeDuration > 0) {
+            fProgress = Math.min(
+              Math.max((time - config.fadeDelay) / config.fadeDuration, 0),
+              1,
+            );
+          } else if (time >= config.fadeDelay) {
+            fProgress = 1;
+          }
+          const fadeEaseFn =
+            fadeEasings[config.fadeEasing] || fadeEasings.linear;
+          opacity = 1 - fadeEaseFn(fProgress);
+          opacity = Math.max(0, Math.min(1, opacity));
+        }
+
+        if (opacity <= 0 && isExporting) return;
+
+        context.save();
+        context.translate(w / 2, h / 2);
+        context.scale(dynamicScale, dynamicScale);
+        context.globalAlpha = opacity;
+
+        for (let i = 0; i < 4; i++) {
+          const angle = (config.rotation + i * 90) * (Math.PI / 180);
+          drawShape(
+            context,
+            currentGap,
+            config.length,
+            config.thickness,
+            angle,
+            config.color,
+          );
+        }
+
+        context.restore();
+      }
+
+      let lastTime = performance.now();
+      let animTime = 0;
+      let isExporting = false;
+
+      function loop(timestamp) {
+        if (isExporting) return;
+
+        let dt = timestamp - lastTime;
+        lastTime = timestamp;
+        if (dt > 100) dt = 16;
+
+        animTime += dt;
+
+        const maxDuration = calculateMaxTime();
+        const totalCycle = maxDuration + 600;
+
+        if (animTime > totalCycle) {
+          animTime = 0;
+        }
+
+        if (animTime <= maxDuration) {
+          scrubber.style.width = `${(animTime / maxDuration) * 100}%`;
+        } else {
+          scrubber.style.width = `100%`;
+        }
+
+        renderFrame(ctx, canvas.width, canvas.height, animTime, false);
+        requestAnimationFrame(loop);
+      }
+
+      async function exportSequence() {
+        isExporting = true;
+        const width = parseInt(document.getElementById("exportW").value) || 512;
+        const height =
+          parseInt(document.getElementById("exportH").value) || 512;
+
+        const btn = exportBtn;
+        const oldText = btn.innerHTML;
+        btn.innerHTML = `<span>Rendering...</span>`;
+        btn.classList.add("opacity-75", "cursor-not-allowed");
+
+        const zip = new JSZip();
+        const eCanvas = document.createElement("canvas");
+        eCanvas.width = width;
+        eCanvas.height = height;
+        const eCtx = eCanvas.getContext("2d");
+
+        const fps = 60;
+        const maxDuration = calculateMaxTime();
+        const totalFrames = Math.ceil((maxDuration / 1000) * fps);
+
+        for (let i = 0; i <= totalFrames + 5; i++) {
+          let time = (i / fps) * 1000;
+
+          renderFrame(eCtx, width, height, time, true);
+
+          const data = eCanvas.toDataURL("image/png").split(",")[1];
+          zip.file(`hitmarker_${i.toString().padStart(3, "0")}.png`, data, {
+            base64: true,
+          });
+        }
+
+        btn.innerHTML = `<span>Compressing...</span>`;
+
+        try {
+          const content = await zip.generateAsync({ type: "blob" });
+          const link = document.createElement("a");
+          link.href = URL.createObjectURL(content);
+          link.download = `hitmarker_${config.style}_${width}x${height}.zip`;
+          link.click();
+        } catch (e) {
+          alert("Export failed.");
+          console.error(e);
+        }
+
+        btn.innerHTML = oldText;
+        btn.classList.remove("opacity-75", "cursor-not-allowed");
+        isExporting = false;
+        lastTime = performance.now();
+        requestAnimationFrame(loop);
+      }
+
+      init();
+    </script>
+  </body>
+</html>
