@@ -1314,7 +1314,7 @@
             capPosition: "outer",
             innerShape: "diamond",
             innerCap: "butt",
-            innerCapPosition: "both",
+            innerCapPosition: "outer",
             color: "#ef4444",
             thickness: 4,
             length: 28,
@@ -1377,7 +1377,7 @@
         travelDelay: document.getElementById("travelDelay"),
         travelDuration: document.getElementById("travelDuration"),
 
-        fade: document.getElementById("fadeToggle"), // Mapped properly to handle preset states
+        fade: document.getElementById("fadeToggle"),
         fadeEasing: document.getElementById("fadeEasing"),
         fadeDelay: document.getElementById("fadeDelay"),
         fadeDuration: document.getElementById("fadeDuration"),
@@ -1473,7 +1473,6 @@
         config.innerScale = parseFloat(inputs.innerScale.value);
         config.innerOffset = parseInt(inputs.innerOffset.value);
 
-        // Sequencer updates
         config.scaleStart = parseFloat(inputs.scaleStart.value);
         config.scaleEasing = inputs.scaleEasing.value;
         config.scaleDelay = parseInt(inputs.scaleDelay.value);
@@ -1490,7 +1489,6 @@
         config.fadeDelay = parseInt(inputs.fadeDelay.value);
         config.fadeDuration = parseInt(inputs.fadeDuration.value);
 
-        // UI Updates
         displays.thickness.innerText = config.thickness + "px";
         displays.length.innerText = config.length + "px";
         displays.gap.innerText = config.gap + "px";
@@ -1510,7 +1508,6 @@
         displays.fadeDelay.innerText = config.fadeDelay + "ms";
         displays.fadeDuration.innerText = config.fadeDuration + "ms";
 
-        // Groups
         document
           .getElementById("parallelControls")
           .classList.toggle("hidden", config.style !== "parallel");
@@ -1521,12 +1518,8 @@
           .getElementById("fadeEasingContainer")
           .classList.toggle("hidden", !config.fade);
 
-        inputs.cap.disabled = config.shape !== "line";
-        inputs.capPosition.disabled = config.shape !== "line";
-        inputs.innerCap.disabled = config.innerShape !== "line";
-        inputs.innerCapPosition.disabled = config.innerShape !== "line";
+        // Disabled state assignments removed so custom caps can apply to all shapes!
 
-        // Draw Graphs
         drawGraph(
           document.getElementById("travelGraph"),
           easings[config.travelEasing],
@@ -1648,17 +1641,44 @@
         currentCap,
         currentCapPos,
       ) {
+        const hasInner = currentCapPos === "inner" || currentCapPos === "both";
+        const hasOuter = currentCapPos === "outer" || currentCapPos === "both";
+
+        ctx.beginPath();
+
+        // 1. DRAW INNER EDGE
+        if (hasInner) {
+          if (currentCap === "round") {
+            ctx.arc(gap, 0, thickness / 2, Math.PI / 2, -Math.PI / 2, false);
+          } else if (currentCap === "diamond") {
+            ctx.moveTo(gap, thickness / 2);
+            ctx.lineTo(gap - thickness / 2, 0);
+            ctx.lineTo(gap, -thickness / 2);
+          } else {
+            ctx.moveTo(gap, thickness / 2);
+            ctx.lineTo(gap, -thickness / 2);
+          }
+        } else {
+          // If shape has an inherent inner profile, draw it
+          if (currentShape === "chevron") {
+            ctx.moveTo(gap, thickness / 2);
+            ctx.lineTo(gap + len / 2, 0);
+            ctx.lineTo(gap, -thickness / 2);
+          } else if (currentShape === "diamond") {
+            ctx.moveTo(gap + len / 2, thickness / 2);
+            ctx.lineTo(gap, 0);
+            ctx.lineTo(gap + len / 2, -thickness / 2);
+          } else {
+            ctx.moveTo(gap, thickness / 2);
+            ctx.lineTo(gap, -thickness / 2);
+          }
+        }
+
+        // 2. DRAW OUTER EDGE
         if (currentShape === "tapered") {
-          ctx.beginPath();
-          ctx.moveTo(gap, -thickness / 2);
-          ctx.lineTo(gap, thickness / 2);
           ctx.lineTo(gap + len, 0);
-          ctx.closePath();
-          ctx.fill();
         } else if (currentShape === "soft-taper") {
           const tipRadius = Math.max(0.5, thickness * 0.3);
-          ctx.beginPath();
-          ctx.moveTo(gap, -thickness / 2);
           ctx.lineTo(gap + len - tipRadius, -tipRadius);
           ctx.arc(
             gap + len - tipRadius,
@@ -1668,67 +1688,40 @@
             Math.PI / 2,
             false,
           );
-          ctx.lineTo(gap, thickness / 2);
-          ctx.closePath();
-          ctx.fill();
         } else if (currentShape === "diamond") {
-          ctx.beginPath();
-          ctx.moveTo(gap, 0);
-          ctx.lineTo(gap + len / 2, thickness / 2);
           ctx.lineTo(gap + len, 0);
-          ctx.lineTo(gap + len / 2, -thickness / 2);
-          ctx.closePath();
-          ctx.fill();
+          ctx.lineTo(gap + len / 2, thickness / 2);
         } else if (currentShape === "chevron") {
-          ctx.beginPath();
-          ctx.moveTo(gap, -thickness / 2);
-          ctx.lineTo(gap + len / 2, 0);
-          ctx.lineTo(gap, thickness / 2);
-          ctx.lineTo(gap + thickness, thickness / 2);
-          ctx.lineTo(gap + len / 2 + thickness, 0);
           ctx.lineTo(gap + thickness, -thickness / 2);
-          ctx.closePath();
-          ctx.fill();
+          ctx.lineTo(gap + len / 2 + thickness, 0);
+          ctx.lineTo(gap + thickness, thickness / 2);
         } else {
-          const hasInner =
-            currentCapPos === "inner" || currentCapPos === "both";
-          const hasOuter =
-            currentCapPos === "outer" || currentCapPos === "both";
-
-          ctx.beginPath();
-
-          if (hasInner && currentCap === "round") {
-            ctx.arc(gap, 0, thickness / 2, Math.PI / 2, -Math.PI / 2, false);
-          } else if (hasInner && currentCap === "diamond") {
-            ctx.moveTo(gap, thickness / 2);
-            ctx.lineTo(gap - thickness / 2, 0);
-            ctx.lineTo(gap, -thickness / 2);
-          } else {
-            ctx.moveTo(gap, thickness / 2);
-            ctx.lineTo(gap, -thickness / 2);
-          }
-
+          // 'line' uses standard outer cap logic
           ctx.lineTo(gap + len, -thickness / 2);
 
-          if (hasOuter && currentCap === "round") {
-            ctx.arc(
-              gap + len,
-              0,
-              thickness / 2,
-              -Math.PI / 2,
-              Math.PI / 2,
-              false,
-            );
-          } else if (hasOuter && currentCap === "diamond") {
-            ctx.lineTo(gap + len + thickness / 2, 0);
-            ctx.lineTo(gap + len, thickness / 2);
+          if (hasOuter) {
+            if (currentCap === "round") {
+              ctx.arc(
+                gap + len,
+                0,
+                thickness / 2,
+                -Math.PI / 2,
+                Math.PI / 2,
+                false,
+              );
+            } else if (currentCap === "diamond") {
+              ctx.lineTo(gap + len + thickness / 2, 0);
+              ctx.lineTo(gap + len, thickness / 2);
+            } else {
+              ctx.lineTo(gap + len, thickness / 2);
+            }
           } else {
             ctx.lineTo(gap + len, thickness / 2);
           }
-
-          ctx.closePath();
-          ctx.fill();
         }
+
+        ctx.closePath();
+        ctx.fill();
       }
 
       function drawShape(
